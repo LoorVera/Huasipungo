@@ -1,0 +1,12 @@
+{
+  "title": "Huasipungo · Videojuego educativo",
+  "description": "Videojuego educativo 2D en pixel art basado en la novela Huasipungo de Jorge Icaza (1934): explora los Andes ecuatorianos, habla con los personajes y completa misiones.",
+  "language": "es",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

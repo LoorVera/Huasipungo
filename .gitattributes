@@ -1,0 +1,29 @@
+# Archivos binarios: se guardan en Git normal (sin Git LFS) para que Vercel
+# los incluya al compilar. Vercel no descarga objetos LFS por defecto.
+
+# Imágenes
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.bmp   binary
+
+# Audio y video
+*.mp3   binary
+*.wav   binary
+*.ogg   binary
+*.m4a   binary
+*.mp4   binary
+*.webm  binary
+
+# Fuentes
+*.ttf   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
+
+# Documentos y comprimidos
+*.pdf   binary
+*.zip   binary
