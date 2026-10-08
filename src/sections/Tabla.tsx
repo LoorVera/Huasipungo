@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { getLevelForXP } from '../hooks/useGame';
+import { tr } from '../i18n';
 
 interface TablaProps {
   leaderboard: { name: string; xp: number; level: number }[];
@@ -25,11 +26,11 @@ export default function Tabla({ leaderboard, playerName }: TablaProps) {
   return (
     <div ref={ref} className="max-w-2xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sistema</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sistema', 'System')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Tabla de Posiciones</h2>
+        }}>{tr('Tabla de Posiciones', 'Leaderboard')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
       </div>
 
@@ -67,9 +68,9 @@ export default function Tabla({ leaderboard, playerName }: TablaProps) {
       <div className="section-reveal rounded overflow-hidden" style={{ border: '1px solid #2a1f0f' }}>
         <div className="grid grid-cols-12 px-4 py-2 text-xs font-display uppercase tracking-widest" style={{ background: '#17100a', color: '#7a6118', borderBottom: '1px solid #2a1f0f' }}>
           <div className="col-span-1">#</div>
-          <div className="col-span-5">Nombre</div>
+          <div className="col-span-5">{tr('Nombre', 'Name')}</div>
           <div className="col-span-4 text-right">XP</div>
-          <div className="col-span-2 text-right">Nivel</div>
+          <div className="col-span-2 text-right">{tr('Nivel', 'Level')}</div>
         </div>
         {sorted.map((entry, i) => {
           const isPlayer = entry.name === playerName;
@@ -88,13 +89,13 @@ export default function Tabla({ leaderboard, playerName }: TablaProps) {
                 {i < 3 ? MEDAL[i] : `${i + 1}.`}
               </div>
               <div className="col-span-5" style={{ color: isPlayer ? '#e8c84a' : '#d4b896' }}>
-                {entry.name} {isPlayer && <span className="text-xs" style={{ color: '#c9a22788' }}>(tú)</span>}
+                {entry.name} {isPlayer && <span className="text-xs" style={{ color: '#c9a22788' }}>({tr('tú', 'you')})</span>}
               </div>
               <div className="col-span-4 text-right font-display font-semibold" style={{ color: '#c9a227' }}>
                 {entry.xp.toLocaleString()} XP
               </div>
               <div className="col-span-2 text-right text-xs" style={{ color: '#8c7459' }}>
-                Nv. {levelInfo.level}
+                {tr('Nv.', 'Lv.')} {levelInfo.level}
               </div>
             </div>
           );
@@ -102,7 +103,7 @@ export default function Tabla({ leaderboard, playerName }: TablaProps) {
       </div>
 
       <p className="section-reveal text-center mt-4 text-xs font-body" style={{ color: '#4a3820' }}>
-        La tabla se actualiza automáticamente con tu progreso
+        {tr('La tabla se actualiza automáticamente con tu progreso', 'The leaderboard updates automatically with your progress')}
       </p>
     </div>
   );

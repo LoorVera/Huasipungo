@@ -3,6 +3,7 @@ import { PERSONAJES } from '../data/content';
 import { PERSONAJES_EXTRA } from '../data/personajesExtra';
 import type { WhoAmIStats } from '../hooks/useGame';
 import Retrato from './Retrato';
+import { tr } from '../i18n';
 
 interface QuienSoyProps {
   whoAmI: WhoAmIStats;
@@ -59,13 +60,13 @@ export default function QuienSoy({ whoAmI, onAnswer }: QuienSoyProps) {
     <div className="rounded p-5 md:p-7" style={{ background: '#17100a', border: '1px solid #c9a22744' }}>
       <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
         <div>
-          <p className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: '#7a6118' }}>Mini juego</p>
-          <h3 className="font-display text-2xl font-bold" style={{ color: '#e8c84a' }}>¿Quién soy?</h3>
+          <p className="font-display text-xs tracking-[0.3em] uppercase" style={{ color: '#7a6118' }}>{tr('Mini juego', 'Mini game')}</p>
+          <h3 className="font-display text-2xl font-bold" style={{ color: '#e8c84a' }}>{tr('¿Quién soy?', 'Who am I?')}</h3>
         </div>
         <div className="flex gap-3 text-xs font-body" style={{ color: '#8c7459' }}>
-          <span>Aciertos <b style={{ color: '#c9a227' }}>{whoAmI.correct}/{whoAmI.total}</b></span>
-          <span>Racha <b style={{ color: '#c9a227' }}>🔥 {whoAmI.streak}</b></span>
-          <span>Resueltos <b style={{ color: '#c9a227' }}>{whoAmI.solved.length}/{PERSONAJES.length}</b></span>
+          <span>{tr('Aciertos', 'Correct')} <b style={{ color: '#c9a227' }}>{whoAmI.correct}/{whoAmI.total}</b></span>
+          <span>{tr('Racha', 'Streak')} <b style={{ color: '#c9a227' }}>🔥 {whoAmI.streak}</b></span>
+          <span>{tr('Resueltos', 'Solved')} <b style={{ color: '#c9a227' }}>{whoAmI.solved.length}/{PERSONAJES.length}</b></span>
         </div>
       </div>
 
@@ -73,13 +74,13 @@ export default function QuienSoy({ whoAmI, onAnswer }: QuienSoyProps) {
         {pistas.slice(0, clues).map((p, i) => (
           <div key={i} className="animate-fade-in font-body text-sm px-4 py-3 rounded italic"
             style={{ background: '#1f1610', border: '1px solid #2a1f0f', color: '#d4b896' }}>
-            <span className="not-italic font-display text-xs mr-2" style={{ color: '#c9a227' }}>Pista {i + 1}</span>“{p}”
+            <span className="not-italic font-display text-xs mr-2" style={{ color: '#c9a227' }}>{tr('Pista', 'Clue')} {i + 1}</span>“{tr(p)}”
           </div>
         ))}
         {!answered && clues < 3 && (
           <button onClick={() => setClues(c => c + 1)} className="text-xs font-body px-3 py-1.5 rounded cursor-pointer"
             style={{ background: '#c9a22712', color: '#c9a227', border: '1px solid #c9a22744' }}>
-            Otra pista (menos XP)
+            {tr('Otra pista (menos XP)', 'Another clue (less XP)')}
           </button>
         )}
       </div>
@@ -99,7 +100,7 @@ export default function QuienSoy({ whoAmI, onAnswer }: QuienSoyProps) {
                 opacity: answered && !isTarget && !isPicked ? 0.5 : 1,
               }}>
               <Retrato id={p.id} color={p.color} size={48} />
-              <span className="font-display text-xs sm:text-sm" style={{ color: '#e8d5b0' }}>{p.nombre}</span>
+              <span className="font-display text-xs sm:text-sm" style={{ color: '#e8d5b0' }}>{tr(p.nombre)}</span>
             </button>
           );
         })}
@@ -108,10 +109,12 @@ export default function QuienSoy({ whoAmI, onAnswer }: QuienSoyProps) {
       {answered && (
         <div className="mt-4 p-4 rounded animate-fade-in" style={{ background: correct ? '#2d5a3d22' : '#9a3a2a1a', border: `1px solid ${correct ? '#4a7c59' : '#9a3a2a'}` }}>
           <p className="font-display text-sm mb-1" style={{ color: correct ? '#6fb083' : '#d97a68' }}>
-            {correct ? `¡Correcto! Soy ${target.nombre}. +${gained} XP` : `No era ese. Yo soy ${target.nombre}.`}
+            {correct
+              ? tr(`¡Correcto! Soy ${target.nombre}. +${gained} XP`, `Correct! I am ${tr(target.nombre)}. +${gained} XP`)
+              : tr(`No era ese. Yo soy ${target.nombre}.`, `Not that one. I am ${tr(target.nombre)}.`)}
           </p>
-          <p className="font-body text-xs mb-3" style={{ color: '#d4b896' }}>{PERSONAJES_EXTRA[target.id].quienEs}</p>
-          <button onClick={next} className="btn-gold px-4 py-2 rounded text-xs cursor-pointer border-0">Siguiente</button>
+          <p className="font-body text-xs mb-3" style={{ color: '#d4b896' }}>{tr(PERSONAJES_EXTRA[target.id].quienEs)}</p>
+          <button onClick={next} className="btn-gold px-4 py-2 rounded text-xs cursor-pointer border-0">{tr('Siguiente', 'Next')}</button>
         </div>
       )}
     </div>

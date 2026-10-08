@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { MAPA_ZONAS } from '../data/content';
 import reference from '../assets/reference.png';
+import { tr } from '../i18n';
 
 interface MapaProps {
   onComplete: () => void;
@@ -30,13 +31,13 @@ export default function Mapa({ onComplete, completed }: MapaProps) {
   return (
     <div ref={ref} className="max-w-5xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sección V</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sección V', 'Section V')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Mapa Interactivo</h2>
+        }}>{tr('Mapa Interactivo', 'Interactive Map')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
-        <p className="mt-4 font-body text-sm" style={{ color: '#8c7459' }}>Haz clic en las zonas para explorar los espacios de la novela</p>
+        <p className="mt-4 font-body text-sm" style={{ color: '#8c7459' }}>{tr('Haz clic en las zonas para explorar los espacios de la novela', 'Click the zones to explore the places of the novel')}</p>
       </div>
 
       <div className="section-reveal grid lg:grid-cols-2 gap-6 items-start">
@@ -44,7 +45,7 @@ export default function Mapa({ onComplete, completed }: MapaProps) {
         <div className="relative rounded overflow-hidden" style={{ background: '#17100a', border: '1px solid #2a1f0f', minHeight: '320px' }}>
           <img
             src={reference}
-            alt="Paisaje andino de Huasipungo"
+            alt={tr('Paisaje andino de Huasipungo', 'Andean landscape of Huasipungo')}
             className="absolute inset-0 w-full h-full object-cover"
             style={{ filter: 'saturate(0.85) contrast(1.05) brightness(0.85)' }}
           />
@@ -82,7 +83,7 @@ export default function Mapa({ onComplete, completed }: MapaProps) {
                       transition: 'all 0.3s ease',
                     }}
                   >
-                    {zona.nombre}
+                    {tr(zona.nombre)}
                   </span>
                   <span
                     className="flex items-center justify-center rounded-full"
@@ -111,18 +112,18 @@ export default function Mapa({ onComplete, completed }: MapaProps) {
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">{selected.emoji}</span>
                 <div>
-                  <h3 className="font-display font-semibold text-lg" style={{ color: '#e8d5b0' }}>{selected.nombre}</h3>
+                  <h3 className="font-display font-semibold text-lg" style={{ color: '#e8d5b0' }}>{tr(selected.nombre)}</h3>
                   <div className="w-2 h-0.5 rounded mt-1" style={{ background: selected.color }} />
                 </div>
               </div>
-              <p className="font-body text-sm leading-relaxed mb-4" style={{ color: '#d4b896' }}>{selected.descripcion}</p>
+              <p className="font-body text-sm leading-relaxed mb-4" style={{ color: '#d4b896' }}>{tr(selected.descripcion)}</p>
               <div className="p-3 rounded" style={{ background: '#23160e', border: `1px solid ${selected.color}22` }}>
-                <p className="font-body text-xs leading-relaxed" style={{ color: '#8c7459' }}>{selected.detalle}</p>
+                <p className="font-body text-xs leading-relaxed" style={{ color: '#8c7459' }}>{tr(selected.detalle)}</p>
               </div>
             </div>
           ) : (
             <div className="p-6 rounded flex items-center justify-center" style={{ background: '#17100a', border: '1px solid #2a1f0f', minHeight: '200px' }}>
-              <p className="font-body text-sm text-center" style={{ color: '#4a3820' }}>Selecciona una zona del mapa</p>
+              <p className="font-body text-sm text-center" style={{ color: '#4a3820' }}>{tr('Selecciona una zona del mapa', 'Select a zone on the map')}</p>
             </div>
           )}
 
@@ -140,7 +141,7 @@ export default function Mapa({ onComplete, completed }: MapaProps) {
                 }}
               >
                 <span>{zona.emoji}</span>
-                {zona.nombre}
+                {tr(zona.nombre)}
               </button>
             ))}
           </div>
@@ -150,7 +151,7 @@ export default function Mapa({ onComplete, completed }: MapaProps) {
       {completed && (
         <div className="mt-8 text-center animate-fade-in">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded text-xs font-display" style={{ background: '#2d5a3d22', border: '1px solid #2d5a3d', color: '#4a7c59' }}>
-            ✓ Sección completada · +200 XP
+            ✓ {tr('Sección completada', 'Section completed')} · +200 XP
           </span>
         </div>
       )}

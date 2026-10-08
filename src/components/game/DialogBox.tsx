@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { HABLANTES, type DialogLine, type Pregunta } from '../../data/dialogos';
 import { audio } from '../../game/audio';
 import PixelPortrait from './PixelPortrait';
+import { tr } from '../../i18n';
 
 interface DialogBoxProps {
   lines: DialogLine[];
@@ -34,11 +35,11 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
   const options = useRef<string[]>([]);
 
   const line = lines[Math.min(idx, lines.length - 1)];
-  const text = phase === 'lines' ? line.text : phase === 'question' ? question?.pregunta ?? '' : '';
+  const text = phase === 'lines' ? tr(line.text) : phase === 'question' ? tr(question?.pregunta ?? '') : '';
   const typing = phase !== 'feedback' && shown < text.length;
   const who = phase === 'lines' ? line.who : asker ?? line.who;
   const speaker = HABLANTES[who] ?? HABLANTES.narrador;
-  const name = phase === 'lines' && line.name ? line.name : speaker.nombre;
+  const name = phase === 'lines' && line.name ? line.name : tr(speaker.nombre);
 
   // Opciones en orden aleatorio (una vez por pregunta).
   if (question && options.current.length === 0) {
@@ -57,8 +58,8 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
 
   const advance = useCallback(() => {
     if (phase === 'lines') {
-      if (shown < line.text.length) {
-        setShown(line.text.length);
+      if (shown < text.length) {
+        setShown(text.length);
         return;
       }
       if (idx < lines.length - 1) {
@@ -77,12 +78,12 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
       return;
     }
     if (phase === 'question') {
-      if (shown < (question?.pregunta.length ?? 0)) setShown(question?.pregunta.length ?? 0);
+      if (shown < text.length) setShown(text.length);
       return;
     }
     audio.play('close');
     onClose(true);
-  }, [phase, shown, line, idx, lines.length, question, onClose]);
+  }, [phase, shown, text, idx, lines.length, question, onClose]);
 
   const choose = useCallback(
     (opt: string) => {
@@ -104,7 +105,7 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
         e.preventDefault();
         audio.play('back');
         // Cuenta como leído si ya se llegó a la última línea (o a la pregunta).
-        const readAll = phase !== 'lines' || (idx === lines.length - 1 && shown >= line.text.length);
+        const readAll = phase !== 'lines' || (idx === lines.length - 1 && shown >= text.length);
         onClose(readAll);
         return;
       }
@@ -151,7 +152,7 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
       style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)' }}
       role="dialog"
       aria-modal="false"
-      aria-label={`Diálogo: ${name}`}
+      aria-label={`${tr('Diálogo', 'Dialogue')}: ${name}`}
     >
       <div
         className="px-box px-box-gold px-box-glass w-full max-w-[760px] flex gap-3 sm:gap-4 p-3 sm:p-4 cursor-pointer animate-px-pop"
@@ -173,7 +174,7 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
           )}
 
           {phase === 'question' && !typing && (
-            <div className="mt-2 grid gap-1.5" role="group" aria-label="Opciones de respuesta">
+            <div className="mt-2 grid gap-1.5" role="group" aria-label={tr('Opciones de respuesta', 'Answer options')}>
               {options.current.map((opt, i) => (
                 <button
                   key={opt}
@@ -186,7 +187,7 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
                   style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}
                 >
                   <span className="px-key text-xs">{i + 1}</span>
-                  <span>{opt}</span>
+                  <span>{tr(opt)}</span>
                 </button>
               ))}
             </div>
@@ -195,16 +196,16 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
           {phase === 'feedback' && question && (
             <div aria-live="polite">
               <p className="font-pixel text-lg mb-1" style={{ color: correct ? '#8fd08a' : '#e08a70' }}>
-                {correct ? `✔ ¡Correcto! +${questionXP} XP` : '✘ No es correcto'}
+                {correct ? tr(`✔ ¡Correcto! +${questionXP} XP`, `✔ Correct! +${questionXP} XP`) : tr('✘ No es correcto', '✘ Not quite')}
               </p>
               {!correct && (
                 <p className="font-body text-sm mb-1" style={{ color: '#e8d5b0' }}>
-                  Respuesta: <b style={{ color: '#e8c84a' }}>{question.correcta}</b>
+                  {tr('Respuesta', 'Answer')}: <b style={{ color: '#e8c84a' }}>{tr(question.correcta)}</b>
                 </p>
               )}
-              <p className="font-body text-sm leading-snug" style={{ color: '#d4b896' }}>{question.explicacion}</p>
+              <p className="font-body text-sm leading-snug" style={{ color: '#d4b896' }}>{tr(question.explicacion)}</p>
               {!correct && (
-                <p className="font-body text-xs mt-1" style={{ color: '#8c7459' }}>Vuelve a hablar con este personaje para intentarlo otra vez.</p>
+                <p className="font-body text-xs mt-1" style={{ color: '#8c7459' }}>{tr('Vuelve a hablar con este personaje para intentarlo otra vez.', 'Talk to this character again to have another try.')}</p>
               )}
             </div>
           )}
@@ -212,7 +213,7 @@ export default function DialogBox({ lines, question, asker, questionXP = 50, tex
           {!typing && phase !== 'question' && (
             <div className="flex justify-end mt-1">
               <span className="font-pixel text-xs animate-px-bob" style={{ color: '#e8c84a' }}>
-                ▼ <span className="hidden sm:inline">E / ESPACIO</span>
+                ▼ <span className="hidden sm:inline">{tr('E / ESPACIO', 'E / SPACE')}</span>
               </span>
             </div>
           )}

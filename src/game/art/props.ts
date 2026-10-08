@@ -4,6 +4,7 @@ import { drawText } from '../font';
 import { getSprites } from '../sprites';
 import { PROPS, Y_TOP, surfaceY, type Prop } from '../world';
 import { type Ctx, rect, px, box, poly, ellipse, line, hash } from './draw';
+import { tr } from '../../i18n';
 
 const OUT = C.outline;
 
@@ -83,6 +84,7 @@ function stoneShape(ctx: Ctx, cx: number, bottom: number, rx: number, ry: number
 }
 
 function plaque(ctx: Ctx, cx: number, top: number, text: string, bg: string = C.woodDark, fg: string = C.goldLight) {
+  text = tr(text);
   const w = Math.max(12, text.length * 6 + 5);
   box(ctx, cx - Math.floor(w / 2), top, w, 11, bg, OUT);
   rect(ctx, cx - Math.floor(w / 2) + 1, top + 1, w - 2, 1, C.wood);

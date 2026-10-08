@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { audio } from '../../game/audio';
+import { tr } from '../../i18n';
 
 export type PauseAction = 'resume' | 'mapa' | 'misiones' | 'personajes' | 'logros' | 'config' | 'title';
 
-const ITEMS: { id: PauseAction; label: string; icon: string }[] = [
-  { id: 'resume', label: 'Continuar', icon: '▶' },
-  { id: 'mapa', label: 'Mapa y viajes', icon: '🗺' },
-  { id: 'misiones', label: 'Misiones', icon: '⚔' },
-  { id: 'personajes', label: 'Personajes', icon: '👥' },
-  { id: 'logros', label: 'Logros y progreso', icon: '🏆' },
-  { id: 'config', label: 'Configuración', icon: '⚙' },
-  { id: 'title', label: 'Menú principal', icon: '⌂' },
+const ITEMS: { id: PauseAction; label: string; en: string; icon: string }[] = [
+  { id: 'resume', label: 'Continuar', en: 'Resume', icon: '▶' },
+  { id: 'mapa', label: 'Mapa y viajes', en: 'Map & travel', icon: '🗺' },
+  { id: 'misiones', label: 'Misiones', en: 'Missions', icon: '⚔' },
+  { id: 'personajes', label: 'Personajes', en: 'Characters', icon: '👥' },
+  { id: 'logros', label: 'Logros y progreso', en: 'Achievements & progress', icon: '🏆' },
+  { id: 'config', label: 'Configuración', en: 'Settings', icon: '⚙' },
+  { id: 'title', label: 'Menú principal', en: 'Main menu', icon: '⌂' },
 ];
 
 interface PauseMenuProps {
@@ -52,10 +53,10 @@ export default function PauseMenu({ active, onAction }: PauseMenuProps) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in" style={{ background: 'rgba(12,9,4,0.62)' }} role="dialog" aria-modal="true" aria-label="Pausa">
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in" style={{ background: 'rgba(12,9,4,0.62)' }} role="dialog" aria-modal="true" aria-label={tr('Pausa', 'Paused')}>
       <div className="px-box px-box-gold px-box-glass w-full max-w-[360px] p-4 animate-px-pop">
-        <p className="px-title text-3xl text-center mb-3">PAUSA</p>
-        <nav aria-label="Menú de pausa">
+        <p className="px-title text-3xl text-center mb-3">{tr('PAUSA', 'PAUSED')}</p>
+        <nav aria-label={tr('Menú de pausa', 'Pause menu')}>
           {ITEMS.map((it, i) => (
             <button
               key={it.id}
@@ -66,11 +67,11 @@ export default function PauseMenu({ active, onAction }: PauseMenuProps) {
             >
               <span className="px-cursor">{sel === i ? '►' : ''}</span>
               <span aria-hidden="true" className="w-6 text-center">{it.icon}</span>
-              <span>{it.label}</span>
+              <span>{tr(it.label, it.en)}</span>
             </button>
           ))}
         </nav>
-        <p className="font-pixel text-[11px] text-center mt-3 tracking-wider" style={{ color: '#8c7459' }}>Tu progreso se guarda automáticamente</p>
+        <p className="font-pixel text-[11px] text-center mt-3 tracking-wider" style={{ color: '#8c7459' }}>{tr('Tu progreso se guarda automáticamente', 'Your progress is saved automatically')}</p>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { Settings } from '../../hooks/useGame';
 import { audio } from '../../game/audio';
+import { tr } from '../../i18n';
 
 interface SettingsPanelProps {
   settings: Settings;
@@ -52,30 +53,36 @@ export default function SettingsPanel({ settings, onChange, playerName, hasSave,
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 sm:py-8">
-      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mb-1" style={{ color: '#c9a227' }}>Sonido</h3>
-      <Row label="Efectos de sonido">
-        <Choice value={true} current={settings.sfx} label="Sí" onPick={v => onChange({ sfx: v })} />
+      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mb-1" style={{ color: '#c9a227' }}>{tr('Idioma', 'Language')}</h3>
+      <Row label={tr('Idioma del juego', 'Game language')}>
+        <Choice value="es" current={settings.lang} label="Español" onPick={v => onChange({ lang: v })} />
+        <Choice value="en" current={settings.lang} label="English" onPick={v => onChange({ lang: v })} />
+      </Row>
+
+      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>{tr('Sonido', 'Sound')}</h3>
+      <Row label={tr('Efectos de sonido', 'Sound effects')}>
+        <Choice value={true} current={settings.sfx} label={tr('Sí', 'Yes')} onPick={v => onChange({ sfx: v })} />
         <Choice value={false} current={settings.sfx} label="No" onPick={v => onChange({ sfx: v })} />
       </Row>
-      <Row label="Música andina" hint="Solo suena después de pulsar Jugar o Continuar.">
-        <Choice value={true} current={settings.music} label="Sí" onPick={v => onChange({ music: v })} />
+      <Row label={tr('Música andina', 'Andean music')} hint={tr('Solo suena después de pulsar Jugar o Continuar.', 'Only plays after you press Play or Continue.')}>
+        <Choice value={true} current={settings.music} label={tr('Sí', 'Yes')} onPick={v => onChange({ music: v })} />
         <Choice value={false} current={settings.music} label="No" onPick={v => onChange({ music: v })} />
       </Row>
 
-      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>Controles</h3>
-      <Row label="Controles táctiles" hint="Botones en pantalla para celulares y tabletas.">
+      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>{tr('Controles', 'Controls')}</h3>
+      <Row label={tr('Controles táctiles', 'Touch controls')} hint={tr('Botones en pantalla para celulares y tabletas.', 'On-screen buttons for phones and tablets.')}>
         <Choice value="auto" current={settings.touch} label="Auto" onPick={v => onChange({ touch: v })} />
-        <Choice value="on" current={settings.touch} label="Siempre" onPick={v => onChange({ touch: v })} />
-        <Choice value="off" current={settings.touch} label="Nunca" onPick={v => onChange({ touch: v })} />
+        <Choice value="on" current={settings.touch} label={tr('Siempre', 'Always')} onPick={v => onChange({ touch: v })} />
+        <Choice value="off" current={settings.touch} label={tr('Nunca', 'Never')} onPick={v => onChange({ touch: v })} />
       </Row>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 py-3 font-body text-sm" style={{ color: '#d4b896' }}>
         {[
-          ['A / D', 'Moverse'],
-          ['W / Espacio', 'Saltar'],
-          ['Shift', 'Correr'],
-          ['E', 'Interactuar'],
-          ['S', 'Bajar de plataforma'],
-          ['Esc', 'Menú / cerrar'],
+          ['A / D', tr('Moverse', 'Move')],
+          [tr('W / Espacio', 'W / Space'), tr('Saltar', 'Jump')],
+          ['Shift', tr('Correr', 'Run')],
+          ['E', tr('Interactuar', 'Interact')],
+          ['S', tr('Bajar de plataforma', 'Drop from platform')],
+          ['Esc', tr('Menú / cerrar', 'Menu / close')],
         ].map(([k, v]) => (
           <div key={k} className="flex items-center gap-2">
             <span className="px-key text-xs">{k}</span>
@@ -84,26 +91,26 @@ export default function SettingsPanel({ settings, onChange, playerName, hasSave,
         ))}
       </div>
 
-      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>Lectura y accesibilidad</h3>
-      <Row label="Velocidad del texto">
-        <Choice value="lenta" current={settings.textSpeed} label="Lenta" onPick={v => onChange({ textSpeed: v })} />
+      <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>{tr('Lectura y accesibilidad', 'Reading & accessibility')}</h3>
+      <Row label={tr('Velocidad del texto', 'Text speed')}>
+        <Choice value="lenta" current={settings.textSpeed} label={tr('Lenta', 'Slow')} onPick={v => onChange({ textSpeed: v })} />
         <Choice value="normal" current={settings.textSpeed} label="Normal" onPick={v => onChange({ textSpeed: v })} />
-        <Choice value="rapida" current={settings.textSpeed} label="Rápida" onPick={v => onChange({ textSpeed: v })} />
+        <Choice value="rapida" current={settings.textSpeed} label={tr('Rápida', 'Fast')} onPick={v => onChange({ textSpeed: v })} />
       </Row>
-      <Row label="Reducir animaciones" hint="Menos partículas y movimientos de cámara más suaves.">
-        <Choice value={true} current={settings.reducedMotion} label="Sí" onPick={v => onChange({ reducedMotion: v })} />
+      <Row label={tr('Reducir animaciones', 'Reduce motion')} hint={tr('Menos partículas y movimientos de cámara más suaves.', 'Fewer particles and gentler camera movement.')}>
+        <Choice value={true} current={settings.reducedMotion} label={tr('Sí', 'Yes')} onPick={v => onChange({ reducedMotion: v })} />
         <Choice value={false} current={settings.reducedMotion} label="No" onPick={v => onChange({ reducedMotion: v })} />
       </Row>
       {canFullscreen && (
-        <Row label="Pantalla completa">
-          <button onClick={toggleFullscreen} className="px-btn-ghost px-3 py-1.5 text-sm">Alternar</button>
+        <Row label={tr('Pantalla completa', 'Fullscreen')}>
+          <button onClick={toggleFullscreen} className="px-btn-ghost px-3 py-1.5 text-sm">{tr('Alternar', 'Toggle')}</button>
         </Row>
       )}
 
       {hasSave && (
         <>
-          <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>Jugador</h3>
-          <Row label="Nombre">
+          <h3 className="font-pixel text-sm tracking-[0.3em] uppercase mt-6 mb-1" style={{ color: '#c9a227' }}>{tr('Jugador', 'Player')}</h3>
+          <Row label={tr('Nombre', 'Name')}>
             <form
               className="flex gap-1.5"
               onSubmit={e => {
@@ -119,14 +126,14 @@ export default function SettingsPanel({ settings, onChange, playerName, hasSave,
                 value={name}
                 onChange={e => setName(e.target.value)}
                 maxLength={24}
-                aria-label="Nombre del jugador"
+                aria-label={tr('Nombre del jugador', 'Player name')}
                 className="px-2 py-1.5 font-pixel text-sm w-40 focus:outline-none"
                 style={{ background: '#0c0904', color: '#f2ead8', boxShadow: 'inset 0 0 0 2px #7a6118' }}
               />
-              <button type="submit" className="px-btn px-3 py-1.5 text-sm">Guardar</button>
+              <button type="submit" className="px-btn px-3 py-1.5 text-sm">{tr('Guardar', 'Save')}</button>
             </form>
           </Row>
-          <Row label="Reiniciar progreso" hint="Borra XP, misiones, logros y la partida guardada.">
+          <Row label={tr('Reiniciar progreso', 'Reset progress')} hint={tr('Borra XP, misiones, logros y la partida guardada.', 'Erases XP, missions, achievements and the saved game.')}>
             {confirmReset ? (
               <>
                 <button
@@ -138,12 +145,12 @@ export default function SettingsPanel({ settings, onChange, playerName, hasSave,
                     onReset();
                   }}
                 >
-                  Sí, borrar todo
+                  {tr('Sí, borrar todo', 'Yes, erase everything')}
                 </button>
-                <button className="px-btn-ghost px-3 py-1.5 text-sm" onClick={() => setConfirmReset(false)}>Cancelar</button>
+                <button className="px-btn-ghost px-3 py-1.5 text-sm" onClick={() => setConfirmReset(false)}>{tr('Cancelar', 'Cancel')}</button>
               </>
             ) : (
-              <button className="px-btn-ghost px-3 py-1.5 text-sm" onClick={() => setConfirmReset(true)}>Reiniciar…</button>
+              <button className="px-btn-ghost px-3 py-1.5 text-sm" onClick={() => setConfirmReset(true)}>{tr('Reiniciar…', 'Reset…')}</button>
             )}
           </Row>
         </>

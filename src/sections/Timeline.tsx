@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { TIMELINE_EVENTS } from '../data/content';
+import { tr } from '../i18n';
 
 interface TimelineProps {
   onComplete: () => void;
@@ -41,11 +42,11 @@ export default function Timeline({ onComplete, completed }: TimelineProps) {
   return (
     <div ref={ref} className="max-w-3xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sección IV</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sección IV', 'Section IV')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Línea del Tiempo</h2>
+        }}>{tr('Línea del Tiempo', 'Timeline')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
       </div>
 
@@ -54,7 +55,7 @@ export default function Timeline({ onComplete, completed }: TimelineProps) {
         {(Object.entries(TYPE_LABELS) as [keyof typeof TYPE_LABELS, string][]).map(([type, label]) => (
           <div key={type} className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ background: TYPE_COLORS[type] }} />
-            <span className="text-xs font-body" style={{ color: '#8c7459' }}>{label}</span>
+            <span className="text-xs font-body" style={{ color: '#8c7459' }}>{tr(label)}</span>
           </div>
         ))}
       </div>
@@ -87,10 +88,10 @@ export default function Timeline({ onComplete, completed }: TimelineProps) {
                       style={{ background: '#17100a', border: `1px solid ${isSelected ? color : '#2a1f0f'}` }}
                     >
                       <span className="text-xs font-display tracking-widest" style={{ color }}>{event.año}</span>
-                      <h3 className="font-display font-semibold text-sm mt-1" style={{ color: '#e8d5b0' }}>{event.titulo}</h3>
-                      <span className="text-xs" style={{ color: `${color}88` }}>{TYPE_LABELS[event.tipo as keyof typeof TYPE_LABELS]}</span>
+                      <h3 className="font-display font-semibold text-sm mt-1" style={{ color: '#e8d5b0' }}>{tr(event.titulo)}</h3>
+                      <span className="text-xs" style={{ color: `${color}88` }}>{tr(TYPE_LABELS[event.tipo as keyof typeof TYPE_LABELS])}</span>
                       {isSelected && (
-                        <p className="mt-3 text-xs font-body leading-relaxed animate-fade-in" style={{ color: '#d4b896' }}>{event.descripcion}</p>
+                        <p className="mt-3 text-xs font-body leading-relaxed animate-fade-in" style={{ color: '#d4b896' }}>{tr(event.descripcion)}</p>
                       )}
                     </button>
                   </div>
@@ -107,9 +108,9 @@ export default function Timeline({ onComplete, completed }: TimelineProps) {
                     style={{ background: '#17100a', border: `1px solid ${isSelected ? color : '#2a1f0f'}` }}
                   >
                     <span className="text-xs font-display tracking-widest" style={{ color }}>{event.año}</span>
-                    <h3 className="font-display font-semibold text-sm mt-1" style={{ color: '#e8d5b0' }}>{event.titulo}</h3>
+                    <h3 className="font-display font-semibold text-sm mt-1" style={{ color: '#e8d5b0' }}>{tr(event.titulo)}</h3>
                     {isSelected && (
-                      <p className="mt-3 text-xs font-body leading-relaxed animate-fade-in" style={{ color: '#d4b896' }}>{event.descripcion}</p>
+                      <p className="mt-3 text-xs font-body leading-relaxed animate-fade-in" style={{ color: '#d4b896' }}>{tr(event.descripcion)}</p>
                     )}
                   </button>
                 </div>
@@ -122,7 +123,7 @@ export default function Timeline({ onComplete, completed }: TimelineProps) {
       {completed && (
         <div className="mt-10 text-center animate-fade-in">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded text-xs font-display" style={{ background: '#2d5a3d22', border: '1px solid #2d5a3d', color: '#4a7c59' }}>
-            ✓ Sección completada · +200 XP
+            ✓ {tr('Sección completada', 'Section completed')} · +200 XP
           </span>
         </div>
       )}

@@ -1,6 +1,7 @@
 // Contenido del videojuego: diálogos de los personajes, preguntas sobre la novela,
 // carteles de cada zona, páginas coleccionables y nombres de las actividades.
 import { MAPA_ZONAS } from './content';
+import { tr } from '../i18n';
 
 export interface DialogLine {
   /** Quién habla: id de personaje, 'narrador', 'cartel' o 'pagina'. */
@@ -206,7 +207,13 @@ export function finalLines(nombre: string): DialogLine[] {
     { who: 'narrador', text: 'Has recorrido el mundo de Huasipungo.' },
     { who: 'narrador', text: 'La novela termina con la rebelión aplastada, pero el grito de Andrés —"¡Ñucanchic huasipungo!"— quedó como símbolo de la lucha por la tierra y la dignidad.' },
     { who: 'narrador', text: 'Treinta años después de su publicación, la Reforma Agraria de 1964 abolió el huasipungo en Ecuador.' },
-    { who: 'narrador', text: `¡Felicidades, ${nombre}! Completaste todas las misiones: eres Maestro de Huasipungo.` },
+    {
+      who: 'narrador',
+      text: tr(
+        `¡Felicidades, ${nombre}! Completaste todas las misiones: eres Maestro de Huasipungo.`,
+        `Congratulations, ${nombre}! You completed all the missions: you are a Master of Huasipungo.`,
+      ),
+    },
   ];
 }
 

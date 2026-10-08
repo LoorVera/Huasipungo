@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { MISIONES } from '../data/content';
+import { tr } from '../i18n';
 
 interface MisionesProps {
   completedSections: string[];
@@ -41,21 +42,21 @@ export default function Misiones({ completedSections, completedMissions, onCompl
   return (
     <div ref={ref} className="max-w-3xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sistema</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sistema', 'System')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Misiones</h2>
+        }}>{tr('Misiones', 'Missions')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
         <p className="mt-4 font-body text-sm" style={{ color: '#8c7459' }}>
-          {completedMissions.length} de {MISIONES.length} misiones completadas
+          {completedMissions.length} {tr('de', 'of')} {MISIONES.length} {tr('misiones completadas', 'missions completed')}
         </p>
       </div>
 
       {/* Progress overview */}
       <div className="section-reveal mb-8 p-4 rounded" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
         <div className="flex justify-between text-xs font-body mb-2" style={{ color: '#8c7459' }}>
-          <span>Progreso general</span>
+          <span>{tr('Progreso general', 'Overall progress')}</span>
           <span style={{ color: '#c9a227' }}>{Math.round((completedMissions.length / MISIONES.length) * 100)}%</span>
         </div>
         <div className="progress-bar">
@@ -96,9 +97,9 @@ export default function Misiones({ completedSections, completedMissions, onCompl
                   <div className="flex items-start justify-between gap-2 flex-wrap">
                     <div>
                       <h3 className="font-display font-semibold text-sm" style={{ color: completed ? '#4a7c59' : unlocked ? '#e8d5b0' : '#4a3820' }}>
-                        {mision.titulo}
+                        {tr(mision.titulo)}
                       </h3>
-                      <p className="font-body text-xs mt-1 leading-relaxed" style={{ color: '#8c7459' }}>{mision.descripcion}</p>
+                      <p className="font-body text-xs mt-1 leading-relaxed" style={{ color: '#8c7459' }}>{tr(mision.descripcion)}</p>
                     </div>
                     <span className="text-xs font-display flex-shrink-0 px-2 py-1 rounded"
                       style={{ background: '#c9a22722', color: '#c9a227', border: '1px solid #c9a22744' }}>
@@ -112,13 +113,13 @@ export default function Misiones({ completedSections, completedMissions, onCompl
                       className="mt-3 text-xs font-body px-3 py-1.5 rounded cursor-pointer border-0 transition-all"
                       style={{ background: '#c9a22722', color: '#c9a227', border: '1px solid #c9a22744' }}
                     >
-                      {sectionDone ? 'Ir al lugar →' : `${mision.instruccion} →`}
+                      {sectionDone ? tr('Ir al lugar →', 'Go to the place →') : `${tr(mision.instruccion)} →`}
                     </button>
                   )}
 
                   {!unlocked && (
                     <p className="mt-2 text-xs font-body" style={{ color: '#4a3820' }}>
-                      🔒 Completa la misión anterior para desbloquear
+                      🔒 {tr('Completa la misión anterior para desbloquear', 'Complete the previous mission to unlock')}
                     </p>
                   )}
                 </div>

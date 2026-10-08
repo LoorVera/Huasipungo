@@ -3,6 +3,7 @@ import { PERSONAJES } from '../data/content';
 import { MEMORIA_PARES } from '../data/personajesExtra';
 import type { MemoryDifficulty, MemoryStats } from '../hooks/useGame';
 import Retrato from '../components/Retrato';
+import { tr } from '../i18n';
 
 interface MemoriaProps {
   stats: MemoryStats;
@@ -175,14 +176,14 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
   return (
     <div ref={ref} className="max-w-4xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Juego</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Juego', 'Game')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Memoria del Huasipungo</h2>
+        }}>{tr('Memoria del Huasipungo', 'Huasipungo Memory')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
         <p className="mt-4 font-body text-sm" style={{ color: '#8c7459' }}>
-          Une a cada personaje con su descripción. Cada pareja suma puntos y una victoria te da XP.
+          {tr('Une a cada personaje con su descripción. Cada pareja suma puntos y una victoria te da XP.', 'Match each character with their description. Every pair scores points and a win earns you XP.')}
         </p>
       </div>
 
@@ -195,14 +196,14 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
                 className="text-left rounded p-5 card-hover cursor-pointer"
                 style={{ background: '#17100a', border: '1px solid #c9a22733' }}>
                 <div className="text-3xl mb-2">{c.emoji}</div>
-                <h3 className="font-display text-lg font-bold" style={{ color: '#e8d5b0' }}>{c.label}</h3>
-                <p className="font-body text-xs mt-1 mb-3" style={{ color: '#8c7459' }}>{c.hint}</p>
+                <h3 className="font-display text-lg font-bold" style={{ color: '#e8d5b0' }}>{tr(c.label)}</h3>
+                <p className="font-body text-xs mt-1 mb-3" style={{ color: '#8c7459' }}>{tr(c.hint)}</p>
                 <div className="flex justify-between text-xs font-body" style={{ color: '#7a6118' }}>
-                  <span>Mejor: <b style={{ color: '#c9a227' }}>{stats.best[d] ?? '—'}</b></span>
-                  <span>Victorias: <b style={{ color: '#c9a227' }}>{stats.wins[d] ?? 0}</b></span>
+                  <span>{tr('Mejor', 'Best')}: <b style={{ color: '#c9a227' }}>{stats.best[d] ?? '—'}</b></span>
+                  <span>{tr('Victorias', 'Wins')}: <b style={{ color: '#c9a227' }}>{stats.wins[d] ?? 0}</b></span>
                 </div>
                 <p className="mt-3 text-xs font-display" style={{ color: '#c9a227' }}>
-                  +{stats.wins[d] ? REPEAT_XP : c.xp} XP al ganar
+                  +{stats.wins[d] ? REPEAT_XP : c.xp} XP {tr('al ganar', 'for winning')}
                 </p>
               </button>
             );
@@ -215,10 +216,10 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
           {/* Marcadores */}
           <div className="grid grid-cols-4 gap-2 mb-5 text-center">
             {[
-              { l: 'Puntos', v: score },
-              { l: 'Intentos', v: attempts },
-              { l: 'Parejas', v: `${matched.length}/${cfg.pairs}` },
-              { l: 'Tiempo', v: fmt(seconds) },
+              { l: tr('Puntos', 'Points'), v: score },
+              { l: tr('Intentos', 'Attempts'), v: attempts },
+              { l: tr('Parejas', 'Pairs'), v: `${matched.length}/${cfg.pairs}` },
+              { l: tr('Tiempo', 'Time'), v: fmt(seconds) },
             ].map(s => (
               <div key={s.l} className="rounded py-2 px-1" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
                 <div className="font-display text-lg sm:text-xl font-bold" style={{ color: '#e8c84a' }}>{s.v}</div>
@@ -228,18 +229,18 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
           </div>
 
           <div className="flex items-center justify-between mb-4 text-xs font-body" style={{ color: '#8c7459' }}>
-            <span>{cfg.emoji} {cfg.label}{streak >= 2 && <span style={{ color: '#e8c84a' }}> · 🔥 racha x{streak}</span>}</span>
+            <span>{cfg.emoji} {tr(cfg.label)}{streak >= 2 && <span style={{ color: '#e8c84a' }}> · 🔥 {tr('racha', 'streak')} x{streak}</span>}</span>
             <div className="flex gap-2">
               <button onClick={() => start(difficulty)} className="px-3 py-1 rounded cursor-pointer"
-                style={{ background: '#c9a22722', color: '#c9a227', border: '1px solid #c9a22744' }}>Reiniciar</button>
+                style={{ background: '#c9a22722', color: '#c9a227', border: '1px solid #c9a22744' }}>{tr('Reiniciar', 'Restart')}</button>
               <button onClick={() => { clearTimers(); setPhase('menu'); }} className="px-3 py-1 rounded cursor-pointer"
-                style={{ background: '#17100a', color: '#8c7459', border: '1px solid #2a1f0f' }}>Dificultad</button>
+                style={{ background: '#17100a', color: '#8c7459', border: '1px solid #2a1f0f' }}>{tr('Dificultad', 'Difficulty')}</button>
             </div>
           </div>
 
           {phase === 'peek' && (
             <p className="text-center text-sm font-body mb-3 animate-fade-in" style={{ color: '#e8c84a' }}>
-              👀 ¡Memoriza las cartas!
+              👀 {tr('¡Memoriza las cartas!', 'Memorize the cards!')}
             </p>
           )}
 
@@ -249,13 +250,13 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
               const par = MEMORIA_PARES.find(x => x.id === card.pairId)!;
               const isMatched = matched.includes(card.pairId);
               const up = phase === 'peek' || isMatched || flipped.includes(idx);
-              const label = card.kind === 'nombre' ? p.nombre : cfg.subtle ? par.dificil : par.facil;
+              const label = tr(card.kind === 'nombre' ? p.nombre : cfg.subtle ? par.dificil : par.facil);
               return (
                 <button
                   key={card.uid}
                   onClick={() => flip(idx)}
                   disabled={phase !== 'play'}
-                  aria-label={up ? label : 'Carta oculta'}
+                  aria-label={up ? label : tr('Carta oculta', 'Hidden card')}
                   className={`flip-scene h-36 sm:h-44 p-0 border-0 bg-transparent cursor-pointer ${shakeIdx.includes(idx) ? 'animate-shake' : ''} ${isMatched ? 'match-glow' : ''}`}
                 >
                   <div className={`flip-card ${up ? 'flipped' : ''}`}>
@@ -278,7 +279,7 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
                       {card.kind === 'nombre' ? (
                         <>
                           <Retrato id={p.id} color={p.color} size={72} />
-                          <span className="font-display text-xs sm:text-sm font-semibold leading-tight" style={{ color: '#e8d5b0' }}>{p.nombre}</span>
+                          <span className="font-display text-xs sm:text-sm font-semibold leading-tight" style={{ color: '#e8d5b0' }}>{tr(p.nombre)}</span>
                         </>
                       ) : (
                         <span className="font-body text-xs sm:text-sm leading-snug italic" style={{ color: '#d4b896' }}>“{label}”</span>
@@ -293,15 +294,17 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
       )}
 
       {phase === 'won' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" role="dialog" aria-modal="true" aria-label="Victoria">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" role="dialog" aria-modal="true" aria-label={tr('Victoria', 'Victory')}>
           <div className="max-w-sm w-full rounded p-8 text-center animate-pop-in" style={{ background: '#1f1610', border: '2px solid #c9a227' }}>
             <div className="text-5xl mb-3">🏆</div>
-            <h3 className="font-display text-2xl font-black mb-1" style={{ color: '#e8c84a' }}>¡Victoria!</h3>
+            <h3 className="font-display text-2xl font-black mb-1" style={{ color: '#e8c84a' }}>{tr('¡Victoria!', 'Victory!')}</h3>
             <p className="font-body text-sm mb-4" style={{ color: '#d4b896' }}>
-              {reward.perfect ? 'Ni un solo error: tu memoria honra a Andrés.' : 'Recordaste a los personajes de Huasipungo.'}
+              {reward.perfect
+                ? tr('Ni un solo error: tu memoria honra a Andrés.', 'Not a single mistake: your memory honors Andrés.')
+                : tr('Recordaste a los personajes de Huasipungo.', 'You remembered the characters of Huasipungo.')}
             </p>
             <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-              {[{ l: 'Puntos', v: score }, { l: 'Intentos', v: attempts }, { l: 'Tiempo', v: fmt(seconds) }].map(s => (
+              {[{ l: tr('Puntos', 'Points'), v: score }, { l: tr('Intentos', 'Attempts'), v: attempts }, { l: tr('Tiempo', 'Time'), v: fmt(seconds) }].map(s => (
                 <div key={s.l} className="rounded py-2" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
                   <div className="font-display text-lg font-bold" style={{ color: '#e8c84a' }}>{s.v}</div>
                   <div className="font-body text-xs" style={{ color: '#8c7459' }}>{s.l}</div>
@@ -309,12 +312,12 @@ export default function Memoria({ stats, onWin }: MemoriaProps) {
               ))}
             </div>
             <p className="font-display text-sm mb-5" style={{ color: '#c9a227' }}>
-              +{reward.xp} XP{!reward.first && <span className="text-xs" style={{ color: '#8c7459' }}> (repetición)</span>}
+              +{reward.xp} XP{!reward.first && <span className="text-xs" style={{ color: '#8c7459' }}> ({tr('repetición', 'replay')})</span>}
             </p>
             <div className="flex gap-2 justify-center flex-wrap">
-              <button onClick={() => start(difficulty)} className="btn-gold px-4 py-2 rounded text-xs cursor-pointer border-0">Jugar otra vez</button>
+              <button onClick={() => start(difficulty)} className="btn-gold px-4 py-2 rounded text-xs cursor-pointer border-0">{tr('Jugar otra vez', 'Play again')}</button>
               <button onClick={() => setPhase('menu')} className="px-4 py-2 rounded text-xs font-body cursor-pointer"
-                style={{ background: '#17100a', color: '#8c7459', border: '1px solid #2a1f0f' }}>Cambiar dificultad</button>
+                style={{ background: '#17100a', color: '#8c7459', border: '1px solid #2a1f0f' }}>{tr('Cambiar dificultad', 'Change difficulty')}</button>
             </div>
           </div>
         </div>

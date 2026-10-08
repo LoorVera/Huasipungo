@@ -43,6 +43,7 @@ export interface Settings {
   touch: 'auto' | 'on' | 'off';
   textSpeed: 'lenta' | 'normal' | 'rapida';
   reducedMotion: boolean;
+  lang: 'es' | 'en';
 }
 
 export interface GameState {
@@ -123,7 +124,7 @@ const INITIAL_STATE: GameState = {
     introSeen: false,
     endingSeen: false,
   },
-  settings: { sfx: true, music: true, touch: 'auto', textSpeed: 'normal', reducedMotion: false },
+  settings: { sfx: true, music: true, touch: 'auto', textSpeed: 'normal', reducedMotion: false, lang: 'es' },
 };
 
 const STORAGE_KEY = 'huasipungo_game';

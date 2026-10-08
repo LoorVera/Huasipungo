@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { tr } from '../i18n';
 
 interface MentefactoProps {
   onComplete: () => void;
@@ -48,7 +49,7 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
   return (
     <div ref={ref} className="max-w-4xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sección III</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sección III', 'Section III')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
@@ -69,14 +70,14 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
               border: activeTab === tab ? 'none' : '1px solid #2a1f0f',
             }}
           >
-            Mentefacto {tab}
+            {tr(`Mentefacto ${tab}`, tab === 'nocional' ? 'Notional concept map' : 'Class concept map')}
           </button>
         ))}
       </div>
 
       {activeTab === 'nocional' ? (
         <div className="section-reveal">
-          <p className="text-center text-xs font-body mb-6" style={{ color: '#8c7459' }}>Haz clic en cada nodo para ver la información</p>
+          <p className="text-center text-xs font-body mb-6" style={{ color: '#8c7459' }}>{tr('Haz clic en cada nodo para ver la información', 'Click each node to see the information')}</p>
           <div className="flex flex-col lg:flex-row items-center gap-8">
             {/* SVG Diagram */}
             <div className="flex-shrink-0">
@@ -96,7 +97,7 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
                 {/* Center node */}
                 <circle cx={CX} cy={CY} r={42} fill="#1f1610" stroke="#c9a227" strokeWidth="2" />
                 <text x={CX} y={CY - 6} textAnchor="middle" fontFamily="Cinzel, serif" fontSize="9" fill="#c9a227" fontWeight="700">HUASIPUNGO</text>
-                <text x={CX} y={CY + 8} textAnchor="middle" fontFamily="Cinzel, serif" fontSize="7" fill="#7a6118">concepto central</text>
+                <text x={CX} y={CY + 8} textAnchor="middle" fontFamily="Cinzel, serif" fontSize="7" fill="#7a6118">{tr('concepto central', 'central concept')}</text>
 
                 {/* Outer nodes */}
                 {NOCIONAL_NODES.map(node => {
@@ -115,7 +116,7 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
                       <text x={nx} y={ny} textAnchor="middle" dominantBaseline="middle"
                         fontFamily="Cinzel, serif" fontSize="7" fill={isSelected ? '#0c0904' : node.color}
                         fontWeight="600">
-                        {node.label.split(' ').map((word, i, arr) => (
+                        {tr(node.label).split(' ').map((word, i, arr) => (
                           <tspan key={i} x={nx} dy={i === 0 ? -(arr.length - 1) * 5 : 10}>{word}</tspan>
                         ))}
                       </text>
@@ -130,12 +131,12 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
               {selectedNode ? (
                 <div className="animate-fade-in-up p-6 rounded" style={{ background: '#17100a', border: `1px solid ${selectedNode.color}55` }}>
                   <div className="w-2 h-2 rounded-full mb-3" style={{ background: selectedNode.color }} />
-                  <h3 className="font-display text-lg font-semibold mb-3" style={{ color: selectedNode.color }}>{selectedNode.label}</h3>
-                  <p className="font-body text-sm leading-relaxed" style={{ color: '#d4b896' }}>{selectedNode.value}</p>
+                  <h3 className="font-display text-lg font-semibold mb-3" style={{ color: selectedNode.color }}>{tr(selectedNode.label)}</h3>
+                  <p className="font-body text-sm leading-relaxed" style={{ color: '#d4b896' }}>{tr(selectedNode.value)}</p>
                 </div>
               ) : (
                 <div className="p-6 rounded flex items-center justify-center min-h-[160px]" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
-                  <p className="font-body text-sm text-center" style={{ color: '#4a3820' }}>Selecciona un nodo del diagrama</p>
+                  <p className="font-body text-sm text-center" style={{ color: '#4a3820' }}>{tr('Selecciona un nodo del diagrama', 'Select a node of the diagram')}</p>
                 </div>
               )}
             </div>
@@ -148,7 +149,7 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
             {/* Superordinada */}
             <div className="text-center mb-2">
               <div className="inline-block px-6 py-3 rounded font-display text-sm" style={{ background: '#17100a', border: '1px solid #7a6118', color: '#c9a227' }}>
-                {CLASAL_DATA.superordinada}
+                {tr(CLASAL_DATA.superordinada)}
               </div>
             </div>
             <div className="flex justify-center mb-2">
@@ -172,7 +173,7 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
               {CLASAL_DATA.infraordinadas.map(inf => (
                 <div key={inf} className="px-4 py-2 rounded text-xs font-display text-center"
                   style={{ background: '#17100a', border: '1px solid #6b3f2a', color: '#d4b896' }}>
-                  {inf}
+                  {tr(inf)}
                 </div>
               ))}
             </div>
@@ -180,21 +181,21 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
             {/* Características y Exclusiones */}
             <div className="grid md:grid-cols-2 gap-4">
               <div className="p-5 rounded" style={{ background: '#17100a', border: '1px solid #2d5a3d55' }}>
-                <h4 className="font-display text-xs uppercase tracking-widest mb-3" style={{ color: '#4a7c59' }}>Características</h4>
+                <h4 className="font-display text-xs uppercase tracking-widest mb-3" style={{ color: '#4a7c59' }}>{tr('Características', 'Characteristics')}</h4>
                 <div className="space-y-1">
                   {CLASAL_DATA.caracteristicas.map(c => (
                     <div key={c} className="flex items-center gap-2 text-xs font-body" style={{ color: '#d4b896' }}>
-                      <span style={{ color: '#4a7c59' }}>+</span> {c}
+                      <span style={{ color: '#4a7c59' }}>+</span> {tr(c)}
                     </div>
                   ))}
                 </div>
               </div>
               <div className="p-5 rounded" style={{ background: '#17100a', border: '1px solid #8a4a4a55' }}>
-                <h4 className="font-display text-xs uppercase tracking-widest mb-3" style={{ color: '#8a4a4a' }}>Exclusiones</h4>
+                <h4 className="font-display text-xs uppercase tracking-widest mb-3" style={{ color: '#8a4a4a' }}>{tr('Exclusiones', 'Exclusions')}</h4>
                 <div className="space-y-1">
                   {CLASAL_DATA.exclusiones.map(e => (
                     <div key={e} className="flex items-center gap-2 text-xs font-body" style={{ color: '#8c7459' }}>
-                      <span style={{ color: '#8a4a4a' }}>✕</span> {e}
+                      <span style={{ color: '#8a4a4a' }}>✕</span> {tr(e)}
                     </div>
                   ))}
                 </div>
@@ -207,7 +208,7 @@ export default function Mentefacto({ onComplete, completed }: MentefactoProps) {
       {completed && (
         <div className="mt-8 text-center animate-fade-in">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded text-xs font-display" style={{ background: '#2d5a3d22', border: '1px solid #2d5a3d', color: '#4a7c59' }}>
-            ✓ Sección completada · +200 XP
+            ✓ {tr('Sección completada', 'Section completed')} · +200 XP
           </span>
         </div>
       )}

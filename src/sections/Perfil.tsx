@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { LOGROS, PERSONAJES, TOTAL_PAGINAS, TOTAL_ZONAS } from '../data/content';
 import { getLevelForXP, getNextLevelXP, LEVEL_NAMES, type MemoryStats, type WhoAmIStats } from '../hooks/useGame';
+import { tr } from '../i18n';
 
 interface PerfilProps {
   playerName: string;
@@ -63,11 +64,11 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
   return (
     <div ref={ref} className="max-w-2xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sistema</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sistema', 'System')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Perfil</h2>
+        }}>{tr('Perfil', 'Profile')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
       </div>
 
@@ -80,7 +81,7 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
           </div>
           <div className="flex-1">
             <h3 className="font-display text-xl font-bold" style={{ color: '#e8d5b0' }}>{playerName}</h3>
-            <p className="font-body text-sm" style={{ color: '#c9a227' }}>{levelInfo.name}</p>
+            <p className="font-body text-sm" style={{ color: '#c9a227' }}>{tr(levelInfo.name)}</p>
           </div>
         </div>
 
@@ -88,7 +89,7 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
         <div className="mb-4">
           <div className="flex justify-between text-xs font-body mb-1" style={{ color: '#8c7459' }}>
             <span>{xp} XP</span>
-            <span>{levelInfo.level < 5 ? `${nextXP} XP (Nivel ${levelInfo.level + 1})` : 'Nivel máximo'}</span>
+            <span>{levelInfo.level < 5 ? `${nextXP} XP (${tr('Nivel', 'Level')} ${levelInfo.level + 1})` : tr('Nivel máximo', 'Max level')}</span>
           </div>
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${progress}%` }} />
@@ -104,7 +105,7 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
                 border: `1px solid ${i + 1 <= levelInfo.level ? '#c9a227' : '#2a1f0f'}`,
                 color: i + 1 <= levelInfo.level ? '#c9a227' : '#4a3820',
               }}>
-              {i + 1}. {name}
+              {i + 1}. {tr(name)}
             </span>
           ))}
         </div>
@@ -112,7 +113,7 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
 
       {/* Stats */}
       <div className="section-reveal mb-6">
-        <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#7a6118' }}>Estadísticas de progreso</h3>
+        <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#7a6118' }}>{tr('Estadísticas de progreso', 'Progress statistics')}</h3>
         <div className="space-y-3">
           {SECTIONS_TOTAL.map(sec => {
             const done = completedSections.includes(sec);
@@ -120,7 +121,7 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
             return (
               <div key={sec}>
                 <div className="flex justify-between text-xs font-body mb-1" style={{ color: '#8c7459' }}>
-                  <span>{SECTION_LABELS[sec]}</span>
+                  <span>{tr(SECTION_LABELS[sec])}</span>
                   <span style={{ color: done ? '#4a7c59' : '#4a3820' }}>{pct}%</span>
                 </div>
                 <div className="progress-bar">
@@ -132,7 +133,7 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
           {quizTotal > 0 && (
             <div>
               <div className="flex justify-between text-xs font-body mb-1" style={{ color: '#8c7459' }}>
-                <span>Quiz (respuestas correctas)</span>
+                <span>{tr('Quiz (respuestas correctas)', 'Quiz (correct answers)')}</span>
                 <span style={{ color: '#c9a227' }}>{quizTotal > 0 ? Math.round((quizCorrect / 15) * 100) : 0}%</span>
               </div>
               <div className="progress-bar">
@@ -146,9 +147,9 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
       {/* Quick stats */}
       <div className="section-reveal grid grid-cols-3 gap-3 mb-6">
         {[
-          { label: 'XP Total', value: xp, color: '#c9a227' },
-          { label: 'Misiones', value: `${completedMissions.length}/6`, color: '#4a7c59' },
-          { label: 'Logros', value: `${unlockedAchievements.length}/${LOGROS.length}`, color: '#7a6118' },
+          { label: tr('XP Total', 'Total XP'), value: xp, color: '#c9a227' },
+          { label: tr('Misiones', 'Missions'), value: `${completedMissions.length}/6`, color: '#4a7c59' },
+          { label: tr('Logros', 'Achievements'), value: `${unlockedAchievements.length}/${LOGROS.length}`, color: '#7a6118' },
         ].map(stat => (
           <div key={stat.label} className="p-4 rounded text-center" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
             <div className="font-display text-xl font-bold" style={{ color: stat.color }}>{stat.value}</div>
@@ -159,13 +160,13 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
 
       {/* Juegos */}
       <div className="section-reveal mb-6">
-        <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#7a6118' }}>Juegos</h3>
+        <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#7a6118' }}>{tr('Juegos', 'Games')}</h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Memoria: victorias', value: (memory.wins.facil ?? 0) + (memory.wins.media ?? 0) + (memory.wins.dificil ?? 0) },
-            { label: 'Memoria: mejor puntaje', value: Math.max(0, ...Object.values(memory.best)) },
-            { label: '¿Quién soy? resueltos', value: `${whoAmI.solved.length}/${PERSONAJES.length}` },
-            { label: 'Personajes vistos', value: `${charactersViewed}/${PERSONAJES.length}` },
+            { label: tr('Memoria: victorias', 'Memory: wins'), value: (memory.wins.facil ?? 0) + (memory.wins.media ?? 0) + (memory.wins.dificil ?? 0) },
+            { label: tr('Memoria: mejor puntaje', 'Memory: best score'), value: Math.max(0, ...Object.values(memory.best)) },
+            { label: tr('¿Quién soy? resueltos', 'Who am I? solved'), value: `${whoAmI.solved.length}/${PERSONAJES.length}` },
+            { label: tr('Personajes vistos', 'Characters viewed'), value: `${charactersViewed}/${PERSONAJES.length}` },
           ].map(stat => (
             <div key={stat.label} className="p-3 rounded text-center" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
               <div className="font-display text-lg font-bold" style={{ color: '#c9a227' }}>{stat.value}</div>
@@ -178,13 +179,13 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
       {/* Aventura en el mapa */}
       {adventure && (
         <div className="section-reveal mb-6">
-          <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#7a6118' }}>Aventura</h3>
+          <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#7a6118' }}>{tr('Aventura', 'Adventure')}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'Zonas descubiertas', value: `${adventure.zones}/${TOTAL_ZONAS}` },
-              { label: 'Páginas encontradas', value: `${adventure.pages}/${TOTAL_PAGINAS}` },
-              { label: 'Personajes conocidos', value: `${adventure.talked}/${PERSONAJES.length}` },
-              { label: 'Preguntas acertadas', value: `${adventure.answered}/${PERSONAJES.length}` },
+              { label: tr('Zonas descubiertas', 'Zones discovered'), value: `${adventure.zones}/${TOTAL_ZONAS}` },
+              { label: tr('Páginas encontradas', 'Pages found'), value: `${adventure.pages}/${TOTAL_PAGINAS}` },
+              { label: tr('Personajes conocidos', 'Characters met'), value: `${adventure.talked}/${PERSONAJES.length}` },
+              { label: tr('Preguntas acertadas', 'Questions answered'), value: `${adventure.answered}/${PERSONAJES.length}` },
             ].map(stat => (
               <div key={stat.label} className="p-3 rounded text-center" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
                 <div className="font-display text-lg font-bold" style={{ color: '#c9a227' }}>{stat.value}</div>
@@ -198,11 +199,11 @@ export default function Perfil({ playerName, xp, completedSections, completedMis
       {/* Reset */}
       <div className="section-reveal text-center">
         <button
-          onClick={() => { if (window.confirm('¿Reiniciar todo el progreso?')) onReset(); }}
+          onClick={() => { if (window.confirm(tr('¿Reiniciar todo el progreso?', 'Reset all progress?'))) onReset(); }}
           className="text-xs font-body px-4 py-2 rounded cursor-pointer border-0 transition-colors"
           style={{ background: '#17100a', color: '#4a3820', border: '1px solid #2a1f0f' }}
         >
-          Reiniciar progreso
+          {tr('Reiniciar progreso', 'Reset progress')}
         </button>
       </div>
     </div>

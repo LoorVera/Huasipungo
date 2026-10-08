@@ -27,6 +27,7 @@ import Celebrations, { type Celebration, type Toast } from './components/game/Ce
 import SettingsPanel from './components/game/SettingsPanel';
 import WorldMap from './components/game/WorldMap';
 import Journal from './components/game/Journal';
+import { setLang, tr, type Lang } from './i18n';
 
 /** Punto de partida: junto a la choza de Andrés. */
 const START_X = 1030;
@@ -47,12 +48,12 @@ interface DialogState {
 
 type Hint = 'move' | 'talk' | 'jump' | null;
 
-const PANEL_META: Record<Panel, { title: string; icon: string; subtitle?: string }> = {
-  mapa: { title: 'Mapa del mundo', icon: '🗺️', subtitle: 'Zonas descubiertas y viaje rápido' },
-  misiones: { title: 'Misiones', icon: '⚔️', subtitle: 'Completa las actividades del mapa' },
-  personajes: { title: 'Personajes', icon: '👥', subtitle: 'Fichas de la novela' },
-  logros: { title: 'Logros y progreso', icon: '🏆' },
-  config: { title: 'Configuración', icon: '⚙️' },
+const PANEL_META: Record<Panel, { title: string; en: string; icon: string; subtitle?: string; subEn?: string }> = {
+  mapa: { title: 'Mapa del mundo', en: 'World map', icon: '🗺️', subtitle: 'Zonas descubiertas y viaje rápido', subEn: 'Discovered zones and fast travel' },
+  misiones: { title: 'Misiones', en: 'Missions', icon: '⚔️', subtitle: 'Completa las actividades del mapa', subEn: 'Complete the activities on the map' },
+  personajes: { title: 'Personajes', en: 'Characters', icon: '👥', subtitle: 'Fichas de la novela', subEn: 'Character profiles from the novel' },
+  logros: { title: 'Logros y progreso', en: 'Achievements & progress', icon: '🏆' },
+  config: { title: 'Configuración', en: 'Settings', icon: '⚙️' },
 };
 
 export default function App() {
@@ -60,6 +61,9 @@ export default function App() {
   const { state } = g;
   const stateRef = useRef(state);
   stateRef.current = state;
+  // El idioma activo se fija antes de dibujar: todos los textos usan tr().
+  const lang = state.settings.lang;
+  setLang(lang);
 
   const [screen, setScreen] = useState<'title' | 'game'>('title');
   const [win, setWin] = useState<Win | null>(null);
@@ -168,6 +172,13 @@ export default function App() {
   useEffect(() => {
     gameRef.current?.setReducedMotion(state.settings.reducedMotion);
   }, [state.settings.reducedMotion, ready]);
+  // Los letreros del mundo (BIBLIOTECA, MEMORIA...) se redibujan al cambiar de idioma.
+  const builtLang = useRef<Lang>('es');
+  useEffect(() => {
+    if (!gameRef.current || builtLang.current === lang) return;
+    builtLang.current = lang;
+    gameRef.current.rebuildTerrain();
+  }, [lang, ready]);
   useEffect(() => {
     if (gameRef.current) gameRef.current.input.runToggle = running;
   }, [running, ready]);
@@ -195,7 +206,7 @@ export default function App() {
     gameRef.current?.setObjective(objective);
   }, [objective, ready]);
   const hudMission = nextMission && objective
-    ? { numero: nextMission.numero, titulo: nextMission.titulo, instruccion: nextMission.instruccion, x: objective.x }
+    ? { numero: nextMission.numero, titulo: tr(nextMission.titulo), instruccion: tr(nextMission.instruccion), x: objective.x }
     : null;
 
   // ── Guardado de la posición ─────────────────────────────────────────────
@@ -225,7 +236,7 @@ export default function App() {
     const first = !s.world.talked.includes(cid);
     const lines = first ? guion.primera : guion.otras[Math.floor(Math.random() * guion.otras.length)];
     const pending = !s.world.answered.includes(cid);
-    const nombre = cid === 'andres' ? 'Andrés' : cid === 'comunidad' ? 'la comunidad' : HABLANTES[cid]?.nombre ?? cid;
+    const nombre = cid === 'andres' ? 'Andrés' : cid === 'comunidad' ? tr('la comunidad', 'the community') : tr(HABLANTES[cid]?.nombre ?? cid);
     audio.play('open');
     setDialog({
       key: nextId(),
@@ -236,13 +247,13 @@ export default function App() {
       onAnswer: ok => {
         if (ok && !stateRef.current.world.answered.includes(cid)) {
           g.markAnswered(cid);
-          gainXP(50, '¡Respuesta correcta!');
+          gainXP(50, tr('¡Respuesta correcta!', 'Correct answer!'));
         }
       },
       onDone: completed => {
         if (completed && first) {
           g.markTalked(cid);
-          gainXP(20, `Conociste a ${nombre}`);
+          gainXP(20, tr(`Conociste a ${nombre}`, `You met ${nombre}`));
         }
       },
     });
@@ -255,13 +266,13 @@ export default function App() {
     audio.play('open');
     setDialog({
       key: nextId(),
-      lines: c.lineas.map(text => ({ who: 'cartel', name: `Cartel · ${c.titulo}`, text })),
+      lines: c.lineas.map(text => ({ who: 'cartel', name: `${tr('Cartel', 'Sign')} · ${tr(c.titulo)}`, text })),
       question: null,
       npc: null,
       onDone: completed => {
         if (completed && first) {
           g.markSign(signId);
-          gainXP(10, 'Cartel leído');
+          gainXP(10, tr('Cartel leído', 'Sign read'));
         }
       },
     });
@@ -269,8 +280,20 @@ export default function App() {
 
   const showIntro = () => {
     const controls: DialogLine = touch
-      ? { who: 'narrador', text: 'Usa los botones de la pantalla: ◀ ▶ para caminar, ▲ para saltar, CORRER para ir más rápido y E para interactuar.' }
-      : { who: 'narrador', text: 'Usa A / D para moverte, W o ESPACIO para saltar, SHIFT para correr y E para interactuar. ESC abre el menú.' };
+      ? {
+          who: 'narrador',
+          text: tr(
+            'Usa los botones de la pantalla: ◀ ▶ para caminar, ▲ para saltar, CORRER para ir más rápido y E para interactuar.',
+            'Use the on-screen buttons: ◀ ▶ to walk, ▲ to jump, RUN to go faster and E to interact.',
+          ),
+        }
+      : {
+          who: 'narrador',
+          text: tr(
+            'Usa A / D para moverte, W o ESPACIO para saltar, SHIFT para correr y E para interactuar. ESC abre el menú.',
+            'Use A / D to move, W or SPACE to jump, SHIFT to run and E to interact. ESC opens the menu.',
+          ),
+        };
     setDialog({
       key: nextId(),
       lines: [...INTRO, controls],
@@ -310,14 +333,14 @@ export default function App() {
     audio.play('zone');
     if (discovered && stateRef.current.playerName) {
       g.visitZone(id);
-      gainXP(25, 'Zona descubierta');
+      gainXP(25, tr('Zona descubierta', 'Zone discovered'));
     }
   };
 
   const handlePage = (id: string) => {
     if (stateRef.current.world.pages.includes(id)) return;
     g.collectPage(id);
-    gainXP(10, 'Página encontrada');
+    gainXP(10, tr('Página encontrada', 'Page found'));
     setPagePopup({ id, key: nextId() });
   };
 
@@ -432,7 +455,7 @@ export default function App() {
   completeSectionRef.current = (id: string) => {
     if (stateRef.current.completedSections.includes(id) || !once(`sec:${id}`)) return;
     g.completeSection(id);
-    celebrate({ kind: 'activity', kicker: ACTIVIDADES[id]?.titulo ?? 'Actividad', title: '¡ACTIVIDAD COMPLETADA!', xp: 200 });
+    celebrate({ kind: 'activity', kicker: tr(ACTIVIDADES[id]?.titulo ?? 'Actividad'), title: tr('¡ACTIVIDAD COMPLETADA!', 'ACTIVITY COMPLETE!'), xp: 200 });
   };
   const onSection = useMemo(
     () => Object.fromEntries(SECTION_IDS.map(id => [id, () => completeSectionRef.current(id)])) as Record<(typeof SECTION_IDS)[number], () => void>,
@@ -452,7 +475,7 @@ export default function App() {
       const m = MISIONES.find(x => x.id === id);
       if (m && onceRef.current.has(`mis:${id}`) === false) {
         onceRef.current.add(`mis:${id}`);
-        celebrate({ kind: 'mission', kicker: `Misión ${m.numero}`, title: '¡MISIÓN COMPLETADA!', sub: m.titulo, xp });
+        celebrate({ kind: 'mission', kicker: `${tr('Misión', 'Mission')} ${m.numero}`, title: tr('¡MISIÓN COMPLETADA!', 'MISSION COMPLETE!'), sub: tr(m.titulo), xp });
       }
     },
     [completeMission, celebrate],
@@ -494,7 +517,7 @@ export default function App() {
       const earned = logro.condicion(state.completedSections, state.quizCompleted, quizScore, QUIZ_QUESTIONS.length, state.completedMissions, logroExtra);
       if (!earned) return;
       unlockAchievement(logro.id);
-      if (once(`ach:${logro.id}`)) celebrate({ kind: 'achievement', kicker: 'Logro desbloqueado', title: logro.titulo, sub: logro.descripcion, emoji: logro.emoji });
+      if (once(`ach:${logro.id}`)) celebrate({ kind: 'achievement', kicker: tr('Logro desbloqueado', 'Achievement unlocked'), title: tr(logro.titulo), sub: tr(logro.descripcion), emoji: logro.emoji });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.playerName, state.completedSections, state.completedMissions, state.quizCompleted, state.unlockedAchievements, quizScore, logroExtra, unlockAchievement, celebrate]);
@@ -502,7 +525,7 @@ export default function App() {
   const prevLevel = useRef(state.level);
   useEffect(() => {
     if (state.level > prevLevel.current && state.playerName) {
-      celebrate({ kind: 'level', kicker: `Nivel ${state.level}`, title: '¡SUBISTE DE NIVEL!', sub: getLevelForXP(state.xp).name });
+      celebrate({ kind: 'level', kicker: `${tr('Nivel', 'Level')} ${state.level}`, title: tr('¡SUBISTE DE NIVEL!', 'LEVEL UP!'), sub: tr(getLevelForXP(state.xp).name) });
     }
     prevLevel.current = state.level;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -520,7 +543,13 @@ export default function App() {
         npc: null,
         onDone: () => {
           g.setEndingSeen();
-          celebrate({ kind: 'final', kicker: 'Fin del recorrido', title: '¡MAESTRO DE HUASIPUNGO!', sub: 'Completaste todas las misiones', emoji: '🏆' });
+          celebrate({
+            kind: 'final',
+            kicker: tr('Fin del recorrido', 'End of the journey'),
+            title: tr('¡MAESTRO DE HUASIPUNGO!', 'MASTER OF HUASIPUNGO!'),
+            sub: tr('Completaste todas las misiones', 'You completed all the missions'),
+            emoji: '🏆',
+          });
         },
       });
     }, 3400);
@@ -532,25 +561,25 @@ export default function App() {
   const handleViewCharacter = (id: string) => {
     if (stateRef.current.viewedCharacters.includes(id)) return;
     g.viewCharacter(id);
-    gainXP(15, 'Personaje descubierto');
+    gainXP(15, tr('Personaje descubierto', 'Character discovered'));
   };
   const handleWhoAnswer = (characterId: string, correct: boolean, xp: number) => {
     g.recordWhoAmI(characterId, correct);
-    if (xp > 0) gainXP(xp, '¿Quién soy?');
+    if (xp > 0) gainXP(xp, tr('¿Quién soy?', 'Who am I?'));
   };
   const handleMemoryWin = (difficulty: MemoryDifficulty, score: number, perfect: boolean, xp: number) => {
     const first = !stateRef.current.memory.wins[difficulty];
     g.recordMemoryWin(difficulty, score, perfect);
     g.addXP(xp);
-    if (first) celebrate({ kind: 'activity', kicker: 'El granero de la memoria', title: '¡ACTIVIDAD COMPLETADA!', xp });
-    else toast(`+${xp} XP`, 'Memoria ganada');
+    if (first) celebrate({ kind: 'activity', kicker: tr('El granero de la memoria'), title: tr('¡ACTIVIDAD COMPLETADA!', 'ACTIVITY COMPLETE!'), xp });
+    else toast(`+${xp} XP`, tr('Memoria ganada', 'Memory game won'));
   };
-  const handleQuizXP = (amount: number) => gainXP(amount, 'Respuesta correcta');
+  const handleQuizXP = (amount: number) => gainXP(amount, tr('Respuesta correcta', 'Correct answer'));
   const handleQuizComplete = (score: number, total: number) => {
     if (stateRef.current.quizCompleted) return;
     g.completeQuiz(score, total);
     const bonus = 500 + (score === total ? 300 : 0);
-    toast(`+${bonus} XP`, 'Gran examen terminado');
+    toast(`+${bonus} XP`, tr('Gran examen terminado', 'Great exam finished'));
     completeSectionRef.current('quiz');
   };
 
@@ -592,7 +621,10 @@ export default function App() {
         return (
           <div className="max-w-2xl mx-auto px-4 py-8">
             <p className="font-body text-sm mb-4 text-center" style={{ color: '#d4b896' }}>
-              Junto al fogón, la comunidad adivina personajes con pistas. Cuantas menos pistas uses, más XP ganas.
+              {tr(
+                'Junto al fogón, la comunidad adivina personajes con pistas. Cuantas menos pistas uses, más XP ganas.',
+                'By the hearth, the community guesses characters from clues. The fewer clues you use, the more XP you earn.',
+              )}
             </p>
             <QuienSoy whoAmI={state.whoAmI} onAnswer={handleWhoAnswer} />
           </div>
@@ -636,7 +668,7 @@ export default function App() {
         if (logrosTab === 'perfil')
           return (
             <Perfil
-              playerName={state.playerName || 'Sin nombre'}
+              playerName={state.playerName || tr('Sin nombre', 'No name')}
               xp={state.xp}
               completedSections={state.completedSections}
               completedMissions={state.completedMissions}
@@ -683,32 +715,36 @@ export default function App() {
   const hintText =
     hint === 'move'
       ? touch
-        ? 'Usa ◀ ▶ para caminar'
-        : 'Muévete con A / D'
+        ? tr('Usa ◀ ▶ para caminar', 'Use ◀ ▶ to walk')
+        : tr('Muévete con A / D', 'Move with A / D')
       : hint === 'talk'
         ? touch
-          ? 'Acércate a Cunshi y toca E para hablar'
-          : 'Acércate a Cunshi y pulsa E para hablar'
+          ? tr('Acércate a Cunshi y toca E para hablar', 'Walk up to Cunshi and tap E to talk')
+          : tr('Acércate a Cunshi y pulsa E para hablar', 'Walk up to Cunshi and press E to talk')
         : hint === 'jump'
           ? touch
-            ? 'Salta con ▲ y activa CORRER para ir más rápido'
-            : 'Salta con W / ESPACIO y mantén SHIFT para correr'
+            ? tr('Salta con ▲ y activa CORRER para ir más rápido', 'Jump with ▲ and turn on RUN to go faster')
+            : tr('Salta con W / ESPACIO y mantén SHIFT para correr', 'Jump with W / SPACE and hold SHIFT to run')
           : null;
 
   const winTitle =
     win?.kind === 'activity'
-      ? { title: ACTIVIDADES[win.id].titulo, icon: ACTIVIDADES[win.id].icono, subtitle: ACTIVIDADES[win.id].lugar }
+      ? { title: tr(ACTIVIDADES[win.id].titulo), icon: ACTIVIDADES[win.id].icono, subtitle: tr(ACTIVIDADES[win.id].lugar) as string | undefined }
       : win
-        ? PANEL_META[win.id]
+        ? {
+            title: tr(PANEL_META[win.id].title, PANEL_META[win.id].en),
+            icon: PANEL_META[win.id].icon,
+            subtitle: PANEL_META[win.id].subtitle ? tr(PANEL_META[win.id].subtitle!, PANEL_META[win.id].subEn) : undefined,
+          }
         : null;
 
   return (
     <div className="game-root">
-      <canvas ref={canvasRef} className="game-canvas" role="img" aria-label="Mundo de Huasipungo: Andes ecuatorianos en pixel art" />
+      <canvas ref={canvasRef} className="game-canvas" role="img" aria-label={tr('Mundo de Huasipungo: Andes ecuatorianos en pixel art', 'World of Huasipungo: the Ecuadorian Andes in pixel art')} />
 
       {!ready && (
         <div className="fixed inset-0 z-[95] flex items-center justify-center" style={{ background: '#0c0904' }}>
-          <p className="font-pixel text-lg tracking-widest animate-px-blink" style={{ color: '#e8c84a' }}>CARGANDO LOS ANDES…</p>
+          <p className="font-pixel text-lg tracking-widest animate-px-blink" style={{ color: '#e8c84a' }}>{tr('CARGANDO LOS ANDES…', 'LOADING THE ANDES…')}</p>
         </div>
       )}
 
@@ -719,6 +755,8 @@ export default function App() {
           saveXP={state.xp}
           savedName={state.playerName}
           touch={touch}
+          lang={lang}
+          onLang={l => g.updateSettings({ lang: l })}
           onNewGame={handleNewGame}
           onContinue={() => startGame(false)}
           onOpen={openPanelFromTitle}
@@ -757,10 +795,10 @@ export default function App() {
             <div key={banner.key} className="pointer-events-none fixed inset-x-0 top-[20%] z-[35] flex justify-center animate-px-slide" role="status">
               <div className="text-center px-10 py-3" style={{ background: 'linear-gradient(90deg, transparent, rgba(12,9,4,0.78) 18%, rgba(12,9,4,0.78) 82%, transparent)' }}>
                 {banner.discovered && (
-                  <p className="font-pixel text-xs tracking-[0.4em]" style={{ color: '#e8c84a' }}>✦ ZONA DESCUBIERTA ✦</p>
+                  <p className="font-pixel text-xs tracking-[0.4em]" style={{ color: '#e8c84a' }}>✦ {tr('ZONA DESCUBIERTA', 'ZONE DISCOVERED')} ✦</p>
                 )}
-                <p className="px-title text-3xl sm:text-5xl">{bannerZone.name.toUpperCase()}</p>
-                <p className="font-pixel text-sm sm:text-base mt-1" style={{ color: '#e8d5b0' }}>{bannerZone.subtitle}</p>
+                <p className="px-title text-3xl sm:text-5xl">{tr(bannerZone.name).toUpperCase()}</p>
+                <p className="font-pixel text-sm sm:text-base mt-1" style={{ color: '#e8d5b0' }}>{tr(bannerZone.subtitle)}</p>
               </div>
             </div>
           )}
@@ -771,13 +809,13 @@ export default function App() {
                 className="w-full max-w-[440px] text-left p-4 animate-px-pop cursor-pointer border-0"
                 style={{ background: '#f2ead8', boxShadow: '0 0 0 3px #0c0904, 0 0 0 6px #c9a227, 0 10px 0 rgba(0,0,0,0.4)' }}
                 onClick={() => setPagePopup(null)}
-                aria-label="Cerrar página"
+                aria-label={tr('Cerrar página', 'Close page')}
               >
                 <p className="font-pixel text-xs tracking-widest mb-1" style={{ color: '#7a6118' }}>
-                  📜 PÁGINA PERDIDA {pageIndex}/{TOTAL_PAGINAS}
+                  📜 {tr('PÁGINA PERDIDA', 'LOST PAGE')} {pageIndex}/{TOTAL_PAGINAS}
                 </p>
-                <p className="font-body text-base leading-snug" style={{ color: '#2a1c10' }}>{PAGINAS[pagePopup.id]}</p>
-                <p className="font-pixel text-[11px] mt-2 text-right" style={{ color: '#7a6118' }}>Se guardó en tu diario · toca para cerrar</p>
+                <p className="font-body text-base leading-snug" style={{ color: '#2a1c10' }}>{tr(PAGINAS[pagePopup.id])}</p>
+                <p className="font-pixel text-[11px] mt-2 text-right" style={{ color: '#7a6118' }}>{tr('Se guardó en tu diario · toca para cerrar', 'Saved to your journal · tap to close')}</p>
               </button>
             </div>
           )}
@@ -815,10 +853,10 @@ export default function App() {
           tabs={
             win.kind === 'panel' && win.id === 'logros'
               ? [
-                  { id: 'logros', label: 'Logros' },
-                  { id: 'tabla', label: 'Posiciones' },
-                  { id: 'perfil', label: 'Perfil' },
-                  { id: 'paginas', label: 'Páginas' },
+                  { id: 'logros', label: tr('Logros', 'Achievements') },
+                  { id: 'tabla', label: tr('Posiciones', 'Leaderboard') },
+                  { id: 'perfil', label: tr('Perfil', 'Profile') },
+                  { id: 'paginas', label: tr('Páginas', 'Pages') },
                 ]
               : undefined
           }

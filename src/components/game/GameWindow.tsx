@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { audio } from '../../game/audio';
+import { tr } from '../../i18n';
 
 interface GameWindowProps {
   title: string;
@@ -70,7 +71,7 @@ export default function GameWindow({ title, subtitle, icon, onClose, children, t
             <h2 className="font-pixel text-lg sm:text-xl tracking-wider uppercase truncate" style={{ color: '#e8c84a' }}>{title}</h2>
             {subtitle && <p className="font-pixel text-[11px] sm:text-xs tracking-widest uppercase truncate" style={{ color: '#8c7459' }}>{subtitle}</p>}
           </div>
-          <button ref={closeRef} onClick={() => { audio.play('close'); onClose(); }} className="px-btn px-3 py-1.5 text-sm flex-shrink-0" aria-label="Cerrar y volver al juego">
+          <button ref={closeRef} onClick={() => { audio.play('close'); onClose(); }} className="px-btn px-3 py-1.5 text-sm flex-shrink-0" aria-label={tr('Cerrar y volver al juego', 'Close and return to the game')}>
             ✕ <span className="hidden sm:inline">ESC</span>
           </button>
         </header>

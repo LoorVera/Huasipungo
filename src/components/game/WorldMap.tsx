@@ -1,6 +1,7 @@
 import { INTERACTABLES, NPCS, PAGES, ZONES, type ZoneId } from '../../game/world';
 import { ACTIVIDADES } from '../../data/dialogos';
 import { audio } from '../../game/audio';
+import { tr } from '../../i18n';
 
 interface WorldMapProps {
   current: ZoneId | null;
@@ -32,12 +33,12 @@ export default function WorldMap({ current, visited, done, talked, pages, onTrav
             >
               <div className="text-xl">{seen ? z.emoji : '❔'}</div>
               <div className="font-pixel text-[10px] leading-tight uppercase" style={{ color: '#f2ead8', textShadow: '1px 1px 0 #0c0904' }}>
-                {seen ? z.name.replace(/^(El|La|Las|Los) /, '') : '???'}
+                {seen ? tr(z.name).replace(/^(El|La|Las|Los|The) /, '') : '???'}
               </div>
               {here && (
                 <div className="absolute -top-2 inset-x-0 flex justify-center">
                   <span className="font-pixel text-[10px] px-1 animate-px-bob" style={{ background: '#f3dc8a', color: '#17100a' }}>
-                    TÚ
+                    {tr('TÚ', 'YOU')}
                   </span>
                 </div>
               )}
@@ -58,8 +59,8 @@ export default function WorldMap({ current, visited, done, talked, pages, onTrav
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-2xl" aria-hidden="true">{seen ? z.emoji : '❔'}</span>
                 <div className="min-w-0">
-                  <p className="font-pixel text-base leading-tight" style={{ color: seen ? '#e8c84a' : '#8c7459' }}>{seen ? z.name : 'Zona sin descubrir'}</p>
-                  <p className="font-body text-xs" style={{ color: '#8c7459' }}>{seen ? z.subtitle : 'Explora para descubrirla'}</p>
+                  <p className="font-pixel text-base leading-tight" style={{ color: seen ? '#e8c84a' : '#8c7459' }}>{seen ? tr(z.name) : tr('Zona sin descubrir', 'Undiscovered zone')}</p>
+                  <p className="font-body text-xs" style={{ color: '#8c7459' }}>{seen ? tr(z.subtitle) : tr('Explora para descubrirla', 'Explore to discover it')}</p>
                 </div>
               </div>
               {seen && (
@@ -70,7 +71,7 @@ export default function WorldMap({ current, visited, done, talked, pages, onTrav
                     return (
                       <li key={a.id} className="flex items-center gap-1.5">
                         <span aria-hidden="true">{meta?.icono}</span>
-                        <span className="flex-1">{meta?.titulo ?? a.name}</span>
+                        <span className="flex-1">{tr(meta?.titulo ?? a.name)}</span>
                         <span style={{ color: ok ? '#8fd08a' : '#4a3820' }}>{ok ? '✔' : '○'}</span>
                       </li>
                     );
@@ -78,14 +79,14 @@ export default function WorldMap({ current, visited, done, talked, pages, onTrav
                   {npcs.map(n => (
                     <li key={n.id} className="flex items-center gap-1.5">
                       <span aria-hidden="true">💬</span>
-                      <span className="flex-1">{n.name}</span>
+                      <span className="flex-1">{tr(n.name)}</span>
                       <span style={{ color: talked.includes(n.characterId) ? '#8fd08a' : '#4a3820' }}>{talked.includes(n.characterId) ? '✔' : '○'}</span>
                     </li>
                   ))}
                   {zonePages.length > 0 && (
                     <li className="flex items-center gap-1.5">
                       <span aria-hidden="true">📜</span>
-                      <span className="flex-1">Páginas perdidas</span>
+                      <span className="flex-1">{tr('Páginas perdidas', 'Lost pages')}</span>
                       <span style={{ color: found === zonePages.length ? '#8fd08a' : '#c9a227' }}>{found}/{zonePages.length}</span>
                     </li>
                   )}
@@ -100,10 +101,10 @@ export default function WorldMap({ current, visited, done, talked, pages, onTrav
                       onTravel(z.spawn);
                     }}
                   >
-                    {current === z.id ? 'Volver al inicio de la zona' : 'Viajar aquí ▶'}
+                    {current === z.id ? tr('Volver al inicio de la zona', 'Back to the start of the zone') : tr('Viajar aquí ▶', 'Travel here ▶')}
                   </button>
                 ) : (
-                  <p className="font-pixel text-xs text-center py-1.5" style={{ color: '#4a3820' }}>🔒 Llega caminando para desbloquear el viaje</p>
+                  <p className="font-pixel text-xs text-center py-1.5" style={{ color: '#4a3820' }}>🔒 {tr('Llega caminando para desbloquear el viaje', 'Walk there to unlock travel')}</p>
                 )}
               </div>
             </div>

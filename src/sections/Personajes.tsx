@@ -4,6 +4,7 @@ import { PERSONAJES_EXTRA } from '../data/personajesExtra';
 import type { WhoAmIStats } from '../hooks/useGame';
 import Retrato from '../components/Retrato';
 import QuienSoy from '../components/QuienSoy';
+import { tr } from '../i18n';
 
 interface PersonajesProps {
   onComplete: () => void;
@@ -16,11 +17,11 @@ interface PersonajesProps {
 
 type Tab = 'ficha' | 'historia' | 'relaciones' | 'representa';
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'ficha', label: 'Ficha' },
-  { id: 'historia', label: 'Mi historia' },
-  { id: 'relaciones', label: 'Mis relaciones' },
-  { id: 'representa', label: '¿Qué represento?' },
+const TABS: { id: Tab; label: string; en: string }[] = [
+  { id: 'ficha', label: 'Ficha', en: 'Profile' },
+  { id: 'historia', label: 'Mi historia', en: 'My story' },
+  { id: 'relaciones', label: 'Mis relaciones', en: 'My relationships' },
+  { id: 'representa', label: '¿Qué represento?', en: 'What do I represent?' },
 ];
 
 export default function Personajes({ onComplete, completed, viewedCharacters, onView, whoAmI, onWhoAnswer }: PersonajesProps) {
@@ -62,26 +63,26 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
   return (
     <div ref={ref} className="max-w-5xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-12">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sección II</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sección II', 'Section II')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Personajes</h2>
+        }}>{tr('Personajes', 'Characters')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
         <p className="mt-4 font-body text-sm" style={{ color: '#8c7459' }}>
-          Haz clic en una tarjeta para conocer al personaje ({viewedCharacters.length}/{PERSONAJES.length} descubiertos)
+          {tr('Haz clic en una tarjeta para conocer al personaje', 'Click a card to meet the character')} ({viewedCharacters.length}/{PERSONAJES.length} {tr('descubiertos', 'discovered')})
         </p>
       </div>
 
       {/* Character map */}
       <div className="section-reveal mb-10 p-5 rounded" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
-        <h3 className="font-display text-sm text-center mb-4" style={{ color: '#7a6118' }}>Mapa de relaciones</h3>
+        <h3 className="font-display text-sm text-center mb-4" style={{ color: '#7a6118' }}>{tr('Mapa de relaciones', 'Relationship map')}</h3>
         <div className="flex flex-wrap justify-center gap-3 text-xs font-body" style={{ color: '#8c7459' }}>
-          <span className="px-3 py-1 rounded" style={{ background: '#6b3f2a33', border: '1px solid #6b3f2a' }}>Andrés Chiliquinga (protagonista)</span>
+          <span className="px-3 py-1 rounded" style={{ background: '#6b3f2a33', border: '1px solid #6b3f2a' }}>{tr('Andrés Chiliquinga (protagonista)', 'Andrés Chiliquinga (protagonist)')}</span>
           <span style={{ color: '#2a1f0f' }}>↔</span>
-          <span className="px-3 py-1 rounded" style={{ background: '#1a120833', border: '1px solid #6b3f2a55' }}>Alfonso Pereira (opresor)</span>
+          <span className="px-3 py-1 rounded" style={{ background: '#1a120833', border: '1px solid #6b3f2a55' }}>{tr('Alfonso Pereira (opresor)')}</span>
           <span style={{ color: '#2a1f0f' }}>↔</span>
-          <span className="px-3 py-1 rounded" style={{ background: '#2d5a3d33', border: '1px solid #2d5a3d' }}>Comunidad indígena</span>
+          <span className="px-3 py-1 rounded" style={{ background: '#2d5a3d33', border: '1px solid #2d5a3d' }}>{tr('Comunidad indígena')}</span>
         </div>
       </div>
 
@@ -97,26 +98,26 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
               border: `1px solid ${p.color}44`,
               animationDelay: `${i * 0.1}s`,
             }}
-            aria-label={`Ver información de ${p.nombre}`}
+            aria-label={`${tr('Ver información de', 'View information about')} ${tr(p.nombre)}`}
           >
             <div className="flex items-start gap-4 mb-4">
               <div className="flex-shrink-0"><Retrato id={p.id} color={p.color} size={56} /></div>
               <div>
-                <h3 className="font-display font-semibold text-base leading-tight" style={{ color: '#e8d5b0' }}>{p.nombre}</h3>
-                <span className="text-xs font-body" style={{ color: '#c9a227' }}>{p.rol}</span>
+                <h3 className="font-display font-semibold text-base leading-tight" style={{ color: '#e8d5b0' }}>{tr(p.nombre)}</h3>
+                <span className="text-xs font-body" style={{ color: '#c9a227' }}>{tr(p.rol)}</span>
               </div>
             </div>
-            <p className="font-body text-sm leading-relaxed" style={{ color: '#8c7459' }}>{p.descripcionCorta}</p>
+            <p className="font-body text-sm leading-relaxed" style={{ color: '#8c7459' }}>{tr(p.descripcionCorta)}</p>
             <div className="mt-4 flex flex-wrap gap-1">
               {p.caracteristicas.slice(0, 2).map(c => (
                 <span key={c} className="text-xs px-2 py-0.5 rounded-full" style={{ background: '#c9a22715', color: '#c9a227' }}>
-                  {c}
+                  {tr(c)}
                 </span>
               ))}
             </div>
             <p className="mt-3 text-xs font-body flex justify-between" style={{ color: '#c9a22766' }}>
-              <span>Ver detalle →</span>
-              {viewedCharacters.includes(p.id) && <span style={{ color: '#4a7c59' }}>✓ visto</span>}
+              <span>{tr('Ver detalle →', 'View details →')}</span>
+              {viewedCharacters.includes(p.id) && <span style={{ color: '#4a7c59' }}>✓ {tr('visto', 'seen')}</span>}
             </p>
           </button>
         ))}
@@ -130,7 +131,7 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
       {completed && (
         <div className="text-center animate-fade-in">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded text-xs font-display" style={{ background: '#2d5a3d22', border: '1px solid #2d5a3d', color: '#4a7c59' }}>
-            ✓ Sección completada · +200 XP
+            ✓ {tr('Sección completada', 'Section completed')} · +200 XP
           </span>
         </div>
       )}
@@ -142,7 +143,7 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
           onClick={() => setSelected(null)}
           role="dialog"
           aria-modal="true"
-          aria-label={selected.nombre}
+          aria-label={tr(selected.nombre)}
         >
           <div
             className="relative max-w-lg w-full rounded p-6 md:p-8 animate-pop-in max-h-[90vh] overflow-y-auto"
@@ -153,15 +154,15 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
               onClick={() => setSelected(null)}
               className="absolute top-4 right-4 text-lg cursor-pointer border-0 bg-transparent"
               style={{ color: '#7a6118' }}
-              aria-label="Cerrar"
+              aria-label={tr('Cerrar', 'Close')}
             >✕</button>
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-5 text-center sm:text-left">
               <Retrato id={selected.id} color={selected.color} size={110} />
               <div>
-                <h3 className="font-display text-xl font-bold" style={{ color: '#e8d5b0' }}>{selected.nombre}</h3>
-                <span className="font-body text-sm" style={{ color: '#c9a227' }}>{selected.rol}</span>
-                <p className="font-body text-sm mt-2" style={{ color: '#d4b896' }}>{ex.quienEs}</p>
+                <h3 className="font-display text-xl font-bold" style={{ color: '#e8d5b0' }}>{tr(selected.nombre)}</h3>
+                <span className="font-body text-sm" style={{ color: '#c9a227' }}>{tr(selected.rol)}</span>
+                <p className="font-body text-sm mt-2" style={{ color: '#d4b896' }}>{tr(ex.quienEs)}</p>
               </div>
             </div>
 
@@ -175,7 +176,7 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
                     border: '1px solid #c9a22755',
                     fontWeight: tab === t.id ? 700 : 400,
                   }}>
-                  {t.label}
+                  {tr(t.label, t.en)}
                 </button>
               ))}
             </div>
@@ -183,41 +184,41 @@ export default function Personajes({ onComplete, completed, viewedCharacters, on
             <div key={tab} className="animate-fade-in font-body text-sm leading-relaxed" style={{ color: '#d4b896' }}>
               {tab === 'ficha' && (
                 <>
-                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>Características</p>
+                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>{tr('Características', 'Traits')}</p>
                   <div className="flex flex-wrap gap-2 mb-5">
                     {selected.caracteristicas.map(c => (
-                      <span key={c} className="text-xs px-2 py-1 rounded" style={{ background: '#c9a22715', color: '#e8c84a', border: '1px solid #c9a22744' }}>{c}</span>
+                      <span key={c} className="text-xs px-2 py-1 rounded" style={{ background: '#c9a22715', color: '#e8c84a', border: '1px solid #c9a22744' }}>{tr(c)}</span>
                     ))}
                   </div>
-                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>Importancia en la novela</p>
-                  <p className="mb-5">{ex.importancia}</p>
-                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>Relaciones</p>
+                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>{tr('Importancia en la novela', 'Importance in the novel')}</p>
+                  <p className="mb-5">{tr(ex.importancia)}</p>
+                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>{tr('Relaciones', 'Relationships')}</p>
                   <div className="space-y-1">
                     {selected.relaciones.map(r => (
                       <div key={r} className="flex items-center gap-2 text-xs" style={{ color: '#8c7459' }}>
-                        <span style={{ color: '#c9a227' }}>→</span> {r}
+                        <span style={{ color: '#c9a227' }}>→</span> {tr(r)}
                       </div>
                     ))}
                   </div>
                 </>
               )}
               {tab === 'historia' && (
-                <p className="whitespace-pre-line">{ex.historia}</p>
+                <p className="whitespace-pre-line">{tr(ex.historia)}</p>
               )}
               {tab === 'relaciones' && (
                 <div className="space-y-3">
                   {ex.relacionesDetalle.map(r => (
                     <div key={r.con} className="p-3 rounded" style={{ background: '#17100a', border: '1px solid #2a1f0f' }}>
-                      <p className="font-display text-sm mb-1" style={{ color: '#e8c84a' }}>↔ {r.con}</p>
-                      <p className="text-xs">{r.texto}</p>
+                      <p className="font-display text-sm mb-1" style={{ color: '#e8c84a' }}>↔ {tr(r.con)}</p>
+                      <p className="text-xs">{tr(r.texto)}</p>
                     </div>
                   ))}
                 </div>
               )}
               {tab === 'representa' && (
                 <div className="p-4 rounded" style={{ background: '#c9a22710', border: '1px solid #c9a22744' }}>
-                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>Simbolismo</p>
-                  <p className="text-base" style={{ color: '#e8d5b0' }}>{ex.representa}</p>
+                  <p className="text-xs uppercase tracking-widest mb-2 font-display" style={{ color: '#7a6118' }}>{tr('Simbolismo', 'Symbolism')}</p>
+                  <p className="text-base" style={{ color: '#e8d5b0' }}>{tr(ex.representa)}</p>
                 </div>
               )}
             </div>

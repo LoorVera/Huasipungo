@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { LOGROS, type LogroExtra } from '../data/content';
+import { tr } from '../i18n';
 
 interface LogrosProps {
   unlockedAchievements: string[];
@@ -42,21 +43,21 @@ export default function Logros({
   return (
     <div ref={ref} className="max-w-3xl mx-auto px-4 py-12">
       <div className="section-reveal text-center mb-10">
-        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>Sistema</p>
+        <p className="font-display text-xs tracking-[0.4em] uppercase mb-3" style={{ color: '#7a6118' }}>{tr('Sistema', 'System')}</p>
         <h2 className="font-display text-4xl md:text-5xl font-black mb-4" style={{
           background: 'linear-gradient(135deg, #e8c84a 0%, #c9a227 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-        }}>Logros</h2>
+        }}>{tr('Logros', 'Achievements')}</h2>
         <div className="w-20 h-px mx-auto" style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }} />
         <p className="mt-4 font-body text-sm" style={{ color: '#8c7459' }}>
-          <span style={{ color: '#c9a227' }}>{unlocked.length}</span> de {LOGROS.length} desbloqueados
+          <span style={{ color: '#c9a227' }}>{unlocked.length}</span> {tr('de', 'of')} {LOGROS.length} {tr('desbloqueados', 'unlocked')}
         </p>
       </div>
 
       {/* Unlocked */}
       {unlocked.length > 0 && (
         <div className="section-reveal mb-8">
-          <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#c9a227' }}>Desbloqueados</h3>
+          <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#c9a227' }}>{tr('Desbloqueados', 'Unlocked')}</h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {unlocked.map(logro => (
               <div key={logro.id} className="flex items-center gap-4 p-4 rounded animate-achievement"
@@ -66,8 +67,8 @@ export default function Logros({
                   {logro.emoji}
                 </div>
                 <div>
-                  <p className="font-display text-sm font-semibold" style={{ color: '#e8d5b0' }}>{logro.titulo}</p>
-                  <p className="font-body text-xs mt-0.5" style={{ color: '#8c7459' }}>{logro.descripcion}</p>
+                  <p className="font-display text-sm font-semibold" style={{ color: '#e8d5b0' }}>{tr(logro.titulo)}</p>
+                  <p className="font-body text-xs mt-0.5" style={{ color: '#8c7459' }}>{tr(logro.descripcion)}</p>
                 </div>
               </div>
             ))}
@@ -78,7 +79,7 @@ export default function Logros({
       {/* Locked */}
       {locked.length > 0 && (
         <div className="section-reveal">
-          <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#4a3820' }}>Por desbloquear</h3>
+          <h3 className="font-display text-sm uppercase tracking-widest mb-4" style={{ color: '#4a3820' }}>{tr('Por desbloquear', 'Locked')}</h3>
           <div className="grid sm:grid-cols-2 gap-3">
             {locked.map(logro => (
               <div key={logro.id} className="flex items-center gap-4 p-4 rounded"
@@ -88,8 +89,8 @@ export default function Logros({
                   🔒
                 </div>
                 <div>
-                  <p className="font-display text-sm font-semibold" style={{ color: '#4a3820' }}>{logro.titulo}</p>
-                  <p className="font-body text-xs mt-0.5" style={{ color: '#3a2810' }}>{logro.descripcion}</p>
+                  <p className="font-display text-sm font-semibold" style={{ color: '#4a3820' }}>{tr(logro.titulo)}</p>
+                  <p className="font-body text-xs mt-0.5" style={{ color: '#3a2810' }}>{tr(logro.descripcion)}</p>
                 </div>
               </div>
             ))}
@@ -100,8 +101,8 @@ export default function Logros({
       {unlocked.length === LOGROS.length && (
         <div className="section-reveal mt-8 text-center p-6 rounded animate-fade-in" style={{ background: '#c9a22711', border: '2px solid #c9a227' }}>
           <div className="text-4xl mb-3">🏆</div>
-          <p className="font-display text-lg font-bold" style={{ color: '#e8c84a' }}>¡Todos los logros desbloqueados!</p>
-          <p className="font-body text-sm mt-2" style={{ color: '#8c7459' }}>Eres un verdadero experto en Huasipungo</p>
+          <p className="font-display text-lg font-bold" style={{ color: '#e8c84a' }}>{tr('¡Todos los logros desbloqueados!', 'All achievements unlocked!')}</p>
+          <p className="font-body text-sm mt-2" style={{ color: '#8c7459' }}>{tr('Eres un verdadero experto en Huasipungo', 'You are a true Huasipungo expert')}</p>
         </div>
       )}
     </div>

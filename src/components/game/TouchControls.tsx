@@ -1,5 +1,6 @@
 import { useRef, useState, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
 import type { Action, Input } from '../../game/input';
+import { tr } from '../../i18n';
 
 interface TouchControlsProps {
   input: Input | null;
@@ -66,7 +67,7 @@ function DPad({ input }: { input: Input | null }) {
       onLostPointerCapture={() => apply(0)}
       onContextMenu={e => e.preventDefault()}
       role="group"
-      aria-label="Mover a la izquierda o a la derecha"
+      aria-label={tr('Mover a la izquierda o a la derecha', 'Move left or right')}
     >
       <div className={`touch-btn w-16 h-16 text-2xl ${dir === -1 ? 'pressed' : ''}`}>◀</div>
       <div className={`touch-btn w-16 h-16 text-2xl ${dir === 1 ? 'pressed' : ''}`}>▶</div>
@@ -86,24 +87,24 @@ export default function TouchControls({ input, interactLabel, running, onToggleR
       <div className="flex items-end gap-2 pointer-events-auto">
         <div className="flex flex-col items-center gap-2">
           <button
-            aria-label={running ? 'Dejar de correr' : 'Correr'}
+            aria-label={running ? tr('Dejar de correr', 'Stop running') : tr('Correr', 'Run')}
             aria-pressed={running}
             className={`touch-btn w-12 h-12 text-xs ${running ? 'pressed' : ''}`}
             onClick={onToggleRun}
           >
-            CORRER
+            {tr('CORRER', 'RUN')}
           </button>
           <HoldButton
             input={input}
             action="interact"
-            label={interactLabel ? `Interactuar: ${interactLabel}` : 'Interactuar'}
+            label={interactLabel ? `${tr('Interactuar', 'Interact')}: ${tr(interactLabel)}` : tr('Interactuar', 'Interact')}
             className={`w-16 h-16 flex-col text-[11px] leading-tight ${interactLabel ? '' : 'opacity-50'}`}
           >
             <span className="text-xl">E</span>
-            <span className="max-w-[60px] truncate">{interactLabel ?? '—'}</span>
+            <span className="max-w-[60px] truncate">{interactLabel ? tr(interactLabel) : '—'}</span>
           </HoldButton>
         </div>
-        <HoldButton input={input} action="jump" label="Saltar" className="w-20 h-20 text-3xl">
+        <HoldButton input={input} action="jump" label={tr('Saltar', 'Jump')} className="w-20 h-20 text-3xl">
           ▲
         </HoldButton>
       </div>

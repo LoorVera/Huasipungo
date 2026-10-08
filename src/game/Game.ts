@@ -36,6 +36,7 @@ import {
   type Layer,
 } from './art/sky';
 import { hash, makeCanvas, px, rect } from './art/draw';
+import { tr } from '../i18n';
 
 export interface GameEvents {
   interact?(target: Interactable): void;
@@ -205,14 +206,19 @@ export class Game {
   }
 
   // ── Construcción ───────────────────────────────────────────────────────
-  private buildWorld() {
+  /** Terreno + decorado (los letreros dependen del idioma, por eso se puede regenerar). */
+  rebuildTerrain() {
     const terrain = renderTerrain();
     const tctx = terrain.getContext('2d')!;
     tctx.imageSmoothingEnabled = false;
-    this.trees = buildTrees();
-    for (const tr of this.trees) drawTrunk(tctx, tr.def);
+    for (const t of this.trees) drawTrunk(tctx, t.def);
     drawProps(tctx);
     this.terrain = terrain;
+  }
+
+  private buildWorld() {
+    this.trees = buildTrees();
+    this.rebuildTerrain();
     this.sky = buildSky();
     this.layers = buildLayers();
     this.clouds = buildClouds();
@@ -781,10 +787,10 @@ export class Game {
     this.drawLayers(camX, camY);
     this.drawWorld(camX, camY);
 
-    for (const tr of this.trees) {
-      const sx = tr.def.x - camX;
+    for (const tree of this.trees) {
+      const sx = tree.def.x - camX;
       if (sx < -40 || sx > W + 40) continue;
-      drawCanopy(ctx, tr, sx, surfaceY(tr.def.x) - camY, this.t, this.wind);
+      drawCanopy(ctx, tree, sx, surfaceY(tree.def.x) - camY, this.t, this.wind);
     }
     drawTufts(ctx, this.tufts, camX, camY, W, this.t, this.wind, false);
     drawCrops(ctx, camX, camY, W, this.t, this.wind);
@@ -1064,7 +1070,7 @@ export class Game {
     // mientras flota un "+XP" no se muestra el aviso para que no se encimen
     if (!it || !this.input.isEnabled() || this.floats.length > 0) return;
     const ctx = this.ctx;
-    const label = it.label;
+    const label = tr(it.label);
     const tw = textWidth(label);
     const keyW = this.touchMode ? 0 : 10;
     const w = tw + keyW + 8;
